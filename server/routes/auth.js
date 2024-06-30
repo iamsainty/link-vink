@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-//login a user using POST
+// Login a user using POST
 router.post("/login", async (req, res) => {
     try {
         let user = await User.findOne({ username: req.body.username });
@@ -41,15 +41,14 @@ router.post("/login", async (req, res) => {
     }
 });
 
-
-//Get user details using Token with POST
+// Get user details using Token with POST
 router.post('/userdetails', userdetails, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: "User Not Found!" });
         }
-        res.status(200).json({user});
+        res.status(200).json({ user });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal Server Error!" });

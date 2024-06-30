@@ -12,11 +12,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/auth', require('./routes/auth'));
+app.use('/link', require('./routes/link'));
+
 app.use('/', (req, res) => {
     res.json({ Success: "Server is working perfectly" });
 });
-app.use('/auth', require('./routes/auth'));
-app.use('/link', require('./routes/link'));
 
 const PORT = process.env.PORT || 5005;
 

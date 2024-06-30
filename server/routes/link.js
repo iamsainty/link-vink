@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Link = require('../models/Link');
-const User = require('../models/User');
+const userdetails = require('../middleware/userdetails');
 
 // Fetching all links for a user
-router.get('/links', async (req, res) => {
+router.get('/links', userdetails, async (req, res) => {
     try {
         const links = await Link.find({ user: req.user.id });
         res.json({ links });
@@ -14,7 +14,7 @@ router.get('/links', async (req, res) => {
 });
 
 // Fetching a single link by ID without updating click count
-router.get('/link/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const link = await Link.findById(req.params.id);
         if (!link) return res.status(404).send("No such link exists.");
@@ -26,7 +26,7 @@ router.get('/link/:id', async (req, res) => {
 });
 
 // Endpoint to handle link clicks and update click count
-router.post('/link/:id/click', async (req, res) => {
+router.post('/click/:id', async (req, res) => {
     try {
         const link = await Link.findById(req.params.id);
         if (!link) return res.status(404).send("No such link exists.");
@@ -40,12 +40,11 @@ router.post('/link/:id/click', async (req, res) => {
 });
 
 // Adding a new link
-router.post('/newlink', async (req, res) => {
+router.post('/newlink', userdetails, async (req, res) => {
     try {
         const { title, url, category } = req.body;
-        const user = await User.findById(req.user.id);
         const link = new Link({
-            user: user._id,
+            user: req.user.id,
             title,
             url,
             category,
@@ -59,7 +58,7 @@ router.post('/newlink', async (req, res) => {
 });
 
 // Updating a link
-router.put('/editlink/:id', async (req, res) => {
+router.put('/edit/:id', userdetails, async (req, res) => {
     try {
         const { title, url, category } = req.body;
         const updatedFields = {
@@ -76,7 +75,7 @@ router.put('/editlink/:id', async (req, res) => {
 });
 
 // Deleting a link
-router.delete('/deletelink/:id', async (req, res) => {
+router.delete('/delete/:id', userdetails, async (req, res) => {
     try {
         await Link.findByIdAndDelete(req.params.id);
         res.json({ message: "Link has been deleted successfully" });
