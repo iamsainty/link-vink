@@ -1,11 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import LinkIcon from '@mui/icons-material/AddLink';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 function AdminNavbar() {
+
+    const navigate=useNavigate();
+
+    const handlelogout=()=>{
+        localStorage.removeItem('authtoken')
+        navigate('/');
+        window.location.reload();
+       }
 
     return (
         <nav className="navbar navbar-expand-lg" style={{ background: 'linear-gradient(to right, #753a88, #cc2b5e)' }}>
@@ -26,7 +34,7 @@ function AdminNavbar() {
                     </Link>
                 </div>
                 <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/logout" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
+                    <Link to="/" onClick={handlelogout} className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
                         <ExitToAppIcon style={{ color: '#ffffff' }} />
                     </Link>
                 </div>
@@ -56,7 +64,7 @@ function AdminNavbar() {
                         </Link>
                     </div>
                     <div className="nav-item">
-                        <Link to="/logout" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh', marginRight: '5vh' }}>
+                        <Link to="/" className="nav-link text-center" onClick={handlelogout} style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh', marginRight: '5vh' }}>
                             Logout
                         </Link>
                     </div>
