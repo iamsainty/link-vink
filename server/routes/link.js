@@ -3,13 +3,25 @@ const router = express.Router();
 const Link = require('../models/Link');
 const userdetails = require('../middleware/userdetails');
 
-// Fetching all links for a user
-router.get('/links', userdetails, async (req, res) => {
+// Fetching all links
+router.get('/links', async (req, res) => {
     try {
-        const links = await Link.find({ user: req.user.id });
-        res.json({ links });
+        const links = await Link.find();
+        res.status(200).json({ links });
     } catch (error) {
-        res.status(500).send("Some error occurred");
+        console.error('Error fetching links:', error);
+        res.status(500).json({ message: 'Failed to fetch user links' });
+    }
+});
+
+//fetching all links of a single user
+router.get('/links/:id', userdetails, async (req, res) => {
+    try {
+        const links = await Link.find({ userId: req.params.id });
+        res.status(200).json({ links });
+    } catch (error) {
+        console.error('Error fetching links:', error);
+        res.status(500).json({ message: 'Failed to fetch user links' });
     }
 });
 
@@ -42,12 +54,12 @@ router.post('/click/:id', async (req, res) => {
 // Adding a new link
 router.post('/newlink', userdetails, async (req, res) => {
     try {
-        const { title, url, category } = req.body;
+        const { title, url, social } = req.body;
         const link = new Link({
             user: req.user.id,
             title,
             url,
-            category,
+            social,
         });
         const savedLink = await link.save();
         res.json({ savedLink });
@@ -56,6 +68,24 @@ router.post('/newlink', userdetails, async (req, res) => {
         res.status(500).send("Some error occurred");
     }
 });
+
+
+//updating link order
+// Assuming you have an Express app setup
+
+router.put('/updateOrder', async (req, res) => {
+    const { links } = req.body;
+
+    try {
+        for (let i = 0; i < links.length; i++) {
+            await Link.findByIdAndUpdate(links[i]._id, { order: i });
+        }
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error updating link order', error });
+    }
+});
+
 
 // Updating a link
 router.put('/edit/:id', userdetails, async (req, res) => {

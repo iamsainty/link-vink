@@ -17,8 +17,12 @@ router.post('/register', async (req, res) => {
             username: req.body.username,
             password: safepassword,
         });
-        // Using jwt
-        const token = jwt.sign({ id: user._id }, JWT_SECRET);
+        const data = {
+            user: {
+                id: user.id
+            }
+        }
+        const token = jwt.sign(data, JWT_SECRET)
         res.status(201).json({ message: 'User created!', data: user, token: token });
     } catch (err) {
         res.status(400).json({ message: "Failed to create the user.", error: err });
@@ -34,25 +38,45 @@ router.post("/login", async (req, res) => {
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) return res.status(401).json({ message: "Invalid username or password" });
 
-        const token = jwt.sign({ id: user.id }, JWT_SECRET);
-        res.status(200).json({ token: token, user: user });
+        const data = {
+            user: {
+                id: user.id
+            }
+        }
+        const token = jwt.sign(data, JWT_SECRET)
+        res.status(200).json({ token: token, data: user });
     } catch (error) {
         res.status(500).json({ message: "An error occurred during login" });
     }
 });
 
-// Get user details using Token with POST
-router.post('/userdetails', userdetails, async (req, res) => {
+//route to fetch a single user from username
+router.get('/user/:username', async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({ message: "User Not Found!" });
-        }
-        res.status(200).json({ user });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Internal Server Error!" });
+        const user = await User.findOne({ username: req.params.username });
+        if (!user) return res.status(404).json({ message: "User not found", exists: false }); // include 'exists' property
+        res.status(200).json({ message: "User found", data: user, exists: true }); // include 'exists' property
+    } catch (err) {
+        res.status(500).json({ message: "An error occurred during fetching the user" });
     }
 });
+
+
+// Get user details using Token with POST
+router.get('/userdetails', userdetails, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(401).json({ message: "User does not exist" });
+        }
+        res.status(200).json({ data: user });
+    } catch (error) {
+        console.error('Error fetching user details:', error.message);
+        res.status(500).send("Some Error occurred");
+    }
+});
+
+
 
 module.exports = router;
