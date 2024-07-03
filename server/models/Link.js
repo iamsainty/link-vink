@@ -15,10 +15,9 @@ const linkSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        category: {
-            type: String,
+        social: {
+            type: Boolean,
             required: true,
-            enum: ['social', 'other'],
         },
         clickCount: {
             type: Number,
