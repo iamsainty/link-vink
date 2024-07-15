@@ -7,7 +7,7 @@ const userdetails = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded.user; // Assuming token contains user object
+        req.user = decoded.user; // Assuming token contains user object with id and username
         next();
     } catch (err) {
         console.error('Token verification failed:', err.message);
