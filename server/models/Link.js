@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 
 const linkSchema = mongoose.Schema(
     {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
+        username: {
+            type: String,
             required: true,
-            ref: 'User',
         },
         title: {
             type: String,
