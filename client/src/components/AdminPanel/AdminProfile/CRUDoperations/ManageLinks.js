@@ -3,8 +3,9 @@ import LinkContext from '../../../Context/LinkContext/linkContext';
 import AddLink from './AddLink';
 import EditLink from './EditLink';
 import DeleteLink from './DeleteLink';
-import { BsPencilSquare, BsTrash } from 'react-icons/bs';
+import LinkCard from '../../../UIcomponent/LinkCard';
 import styled from 'styled-components';
+import { BsPencilSquare, BsTrash } from 'react-icons/bs';
 
 const ManageLinks = () => {
     const { links, deleteLink, editLink } = useContext(LinkContext);
@@ -13,6 +14,7 @@ const ManageLinks = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [linkToDelete, setLinkToDelete] = useState(null);
     const [showSocial, setShowSocial] = useState(false);
+
 
     const handleSaveLink = () => {
         if (!editingLink.title || !editingLink.url) {
@@ -34,11 +36,12 @@ const ManageLinks = () => {
         setShowEditModal(false);
     };
 
-    const truncateText = (text, maxLength) => {
-        if (text.length > maxLength) {
-            return text.substring(0, maxLength) + '...';
-        }
-        return text;
+    const changeToProfile = () => {
+        setShowSocial(false);
+    };
+
+    const changeToSocial = () => {
+        setShowSocial(true);
     };
 
     const Card = styled.div`
@@ -74,14 +77,6 @@ const ManageLinks = () => {
         cursor: pointer;
     `;
 
-    const changeToProfile = () => {
-        setShowSocial(false);
-    };
-
-    const changeToSocial = () => {
-        setShowSocial(true);
-    };
-
     return (
         <div className="container">
             <h1
@@ -102,44 +97,35 @@ const ManageLinks = () => {
             <div className="d-none d-lg-flex flex-row row">
                 <div className="col-md-6">
                     <h2 style={{ fontWeight: '600' }}>Your Profiles</h2>
-                    {links.filter(link => !link.social)
-                        .slice(0)
-                        .reverse()
-                        .map(link => (
-                            <Card key={link._id}>
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">{truncateText(link.title, 20)}</h5>
-                                        <p className="card-text">{truncateText(link.url, 30)}</p>
-                                        <div className="d-flex">
-                                            <EditButton onClick={() => { setEditingLink(link); setShowEditModal(true); }} />
-                                            <DeleteButton onClick={() => { setShowDeleteModal(true); setLinkToDelete(link); }} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card>
-                        ))
-                    }
+                    {links.filter(link => !link.social).reverse().map(link => (
+                        <LinkCard
+                            key={link._id}
+                            link={link}
+                            setEditingLink={setEditingLink}
+                            setShowEditModal={setShowEditModal}
+                            setShowDeleteModal={setShowDeleteModal}
+                            setLinkToDelete={setLinkToDelete}
+                            Card={Card}
+                            EditButton={EditButton}
+                            DeleteButton={DeleteButton}
+                        />
+                    ))}
                 </div>
                 <div className="col-md-6">
                     <h2 style={{ fontWeight: '600' }}>Social Handles</h2>
-                    {links.filter(link => link.social)
-                        .slice(0)
-                        .reverse()
-                        .map(link => (
-                            <Card key={link._id}>
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">{truncateText(link.title, 20)}</h5>
-                                        <p className="card-text">{truncateText(link.url, 30)}</p>
-                                        <div className="d-flex">
-                                            <EditButton onClick={() => { setEditingLink(link); setShowEditModal(true); }} />
-                                            <DeleteButton onClick={() => { setShowDeleteModal(true); setLinkToDelete(link); }} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card>
-                        ))}
+                    {links.filter(link => link.social).reverse().map(link => (
+                        <LinkCard
+                            key={link._id}
+                            link={link}
+                            setEditingLink={setEditingLink}
+                            setShowEditModal={setShowEditModal}
+                            setShowDeleteModal={setShowDeleteModal}
+                            setLinkToDelete={setLinkToDelete}
+                            Card={Card}
+                            EditButton={EditButton}
+                            DeleteButton={DeleteButton}
+                        />
+                    ))}
                 </div>
             </div>
 
@@ -174,47 +160,33 @@ const ManageLinks = () => {
                 </div>
                 <div>
                     {showSocial === false ? (
-                        <div>
-                            {links.filter(link => !link.social)
-                                .slice(0)
-                                .reverse()
-                                .map(link => (
-                                    <Card key={link._id}>
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5 className="card-title">{truncateText(link.title, 20)}</h5>
-                                                <p className="card-text">{truncateText(link.url, 30)}</p>
-                                                <div className="d-flex">
-                                                    <EditButton onClick={() => { setEditingLink(link); setShowEditModal(true); }} />
-                                                    <DeleteButton onClick={() => { setShowDeleteModal(true); setLinkToDelete(link); }} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))
-                            }
-                        </div>
+                        links.filter(link => !link.social).reverse().map(link => (
+                            <LinkCard
+                                key={link._id}
+                                link={link}
+                                setEditingLink={setEditingLink}
+                                setShowEditModal={setShowEditModal}
+                                setShowDeleteModal={setShowDeleteModal}
+                                setLinkToDelete={setLinkToDelete}
+                                Card={Card}
+                                EditButton={EditButton}
+                                DeleteButton={DeleteButton}
+                            />
+                        ))
                     ) : (
-                        <div>
-                            {links.filter(link => link.social)
-                                .slice(0)
-                                .reverse()
-                                .map(link => (
-                                    <Card key={link._id}>
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5 className="card-title">{truncateText(link.title, 20)}</h5>
-                                                <p className="card-text">{truncateText(link.url, 30)}</p>
-                                                <div className="d-flex">
-                                                    <EditButton onClick={() => { setEditingLink(link); setShowEditModal(true); }} />
-                                                    <DeleteButton onClick={() => { setShowDeleteModal(true); setLinkToDelete(link); }} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))
-                            }
-                        </div>
+                        links.filter(link => link.social).reverse().map(link => (
+                            <LinkCard
+                                key={link._id}
+                                link={link}
+                                setEditingLink={setEditingLink}
+                                setShowEditModal={setShowEditModal}
+                                setShowDeleteModal={setShowDeleteModal}
+                                setLinkToDelete={setLinkToDelete}
+                                Card={Card}
+                                EditButton={EditButton}
+                                DeleteButton={DeleteButton}
+                            />
+                        ))
                     )}
                 </div>
             </div>
