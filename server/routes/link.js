@@ -15,9 +15,9 @@ router.get('/links', async (req, res) => {
 });
 
 //fetching all links of a single user
-router.get('/links/:id', userdetails, async (req, res) => {
+router.get('/links/:username', async (req, res) => {
     try {
-        const links = await Link.find({ userId: req.params.id });
+        const links = await Link.find({ username: req.params.username });
         res.status(200).json({ links });
     } catch (error) {
         console.error('Error fetching links:', error);
@@ -56,7 +56,7 @@ router.post('/newlink', userdetails, async (req, res) => {
     try {
         const { title, url, social } = req.body;
         const link = new Link({
-            user: req.user.id,
+            username: req.user.username,
             title,
             url,
             social,
@@ -65,7 +65,7 @@ router.post('/newlink', userdetails, async (req, res) => {
         res.json({ savedLink });
     } catch (error) {
         console.log(error);
-        res.status(500).send("Some error occurred");
+        res.status(500).json("Some error occurred");
     }
 });
 

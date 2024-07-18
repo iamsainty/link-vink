@@ -19,7 +19,8 @@ router.post('/register', async (req, res) => {
         });
         const data = {
             user: {
-                id: user.id
+                id: user.id,
+                username:  user.username,
             }
         }
         const token = jwt.sign(data, JWT_SECRET)
@@ -40,7 +41,8 @@ router.post("/login", async (req, res) => {
 
         const data = {
             user: {
-                id: user.id
+                id: user.id, // user.id is the id of the user
+                username: user.username
             }
         }
         const token = jwt.sign(data, JWT_SECRET)
@@ -55,6 +57,8 @@ router.get('/user/:username', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username });
         if (!user) return res.status(404).json({ message: "User not found", exists: false }); // include 'exists' property
+        // update profile views
+        user.profileViews += 1;
         res.status(200).json({ message: "User found", data: user, exists: true }); // include 'exists' property
     } catch (err) {
         res.status(500).json({ message: "An error occurred during fetching the user" });
