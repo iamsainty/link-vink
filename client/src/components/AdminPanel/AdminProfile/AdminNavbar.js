@@ -7,29 +7,30 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 function AdminNavbar() {
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
-    const handlelogout=()=>{
+    const handlelogout = () => {
+        localStorage.removeItem('username');
         localStorage.removeItem('authtoken')
         navigate('/');
         window.location.reload();
-       }
+    }
 
     return (
         <nav className="navbar navbar-expand-lg" style={{ background: 'linear-gradient(to right, #753a88, #cc2b5e)' }}>
             <div className="navbar-nav d-lg-none w-100 d-flex justify-content-evenly flex-row">
                 <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
+                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
                         <HomeIcon style={{ color: '#ffffff' }} />
                     </Link>
                 </div>
                 <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/links" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
+                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
                         <LinkIcon style={{ color: '#ffffff' }} />
                     </Link>
                 </div>
                 <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/stats" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
+                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
                         <AssessmentIcon style={{ color: '#ffffff' }} />
                     </Link>
                 </div>
@@ -39,27 +40,27 @@ function AdminNavbar() {
                     </Link>
                 </div>
             </div>
-            
 
-            <div className="navbar-nav w-100 row">
-                <div className="col d-none d-lg-flex align-items-center mx-5">
-                    <Link to="/" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 'bold' }}>
+
+            <div className="d-none d-lg-flex navbar-nav w-100 row">
+                <div className="col d-flex align-items-center ml-5">
+                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 'bold' }}>
                         Link Vink
                     </Link>
                 </div>
                 <div className="col-md-auto d-none d-lg-flex d-flex justify-content-end">
                     <div className="nav-item">
-                        <Link to="/" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
+                        <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
                             Home
                         </Link>
                     </div>
                     <div className="nav-item">
-                        <Link to="/links" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
+                        <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
                             Links
                         </Link>
                     </div>
                     <div className="nav-item">
-                        <Link to="/stats" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
+                        <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
                             Stats
                         </Link>
                     </div>
@@ -70,6 +71,7 @@ function AdminNavbar() {
                     </div>
                 </div>
             </div>
+
         </nav>
     );
 }

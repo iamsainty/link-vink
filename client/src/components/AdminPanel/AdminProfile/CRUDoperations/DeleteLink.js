@@ -18,7 +18,8 @@ const DeleteLink = ({ showModal, setShowModal, handleDeleteLink }) => {
                                 width: '100%',
                                 backgroundImage: 'linear-gradient(to right, #753a88, #a13373)',
                                 border: '0',
-                                borderRadius: '1vh'
+                                borderRadius: '1vh',
+                                fontSize: '2vh'
                             }}
                             onClick={() => setShowModal(false)}
                         >
@@ -31,7 +32,8 @@ const DeleteLink = ({ showModal, setShowModal, handleDeleteLink }) => {
                                 width: '100%',
                                 backgroundImage: 'linear-gradient(to right, #a13373, #cc2b5e)',
                                 border: '0',
-                                borderRadius: '1vh'
+                                borderRadius: '1vh',
+                                fontSize: '2vh'
                             }}
                             onClick={handleDeleteLink}
                         >

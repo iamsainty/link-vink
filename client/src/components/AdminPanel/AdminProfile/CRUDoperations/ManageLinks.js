@@ -1,19 +1,80 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import LinkContext from '../../../Context/LinkContext/linkContext';
 import AddLink from './AddLink';
 import EditLink from './EditLink';
 import DeleteLink from './DeleteLink';
 import LinkCard from '../../../UIcomponent/LinkCard';
 import styled from 'styled-components';
-import { BsPencilSquare, BsTrash } from 'react-icons/bs';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FaSadTear } from 'react-icons/fa';
+
+const Card = styled.div`
+    background-color: #fff;
+    border-radius: 1vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+    padding: 10px;
+    transition: transform 0.3s ease-in-out;
+
+    .card {
+        border: none;
+    }
+
+    .card-title,
+    .card-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .d-flex {
+        margin-top: 10px;
+    }
+`;
+
+const NoLinksMessage = styled.div`
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    color: grey;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+    .icon {
+        font-size: 2em;
+        margin: 20px;
+    }
+`;
+
+const EditButton = styled(FiEdit)`
+    cursor: pointer;
+    margin-right: 15px;
+`;
+
+const DeleteButton = styled(FiTrash2)`
+    cursor: pointer;
+    margin-right: 15px;
+`;
 
 const ManageLinks = () => {
-    const { links, deleteLink, editLink } = useContext(LinkContext);
+    const { links, fetchLinks, deleteLink, editLink } = useContext(LinkContext);
     const [editingLink, setEditingLink] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [linkToDelete, setLinkToDelete] = useState(null);
     const [showSocial, setShowSocial] = useState(false);
+
+    const username = localStorage.getItem('username');
+
+    useEffect(() => {
+        fetchLinks(username);
+    }, [username, fetchLinks]);
+
 
 
     const handleSaveLink = () => {
@@ -44,38 +105,30 @@ const ManageLinks = () => {
         setShowSocial(true);
     };
 
-    const Card = styled.div`
-        background-color: #fff;
-        border-radius: 1vh;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        margin-bottom: 20px;
-        padding: 10px;
-        transition: transform 0.3s ease-in-out;
-
-        .card {
-            border: none;
+    const renderLinks = (filteredLinks) => {
+        if (filteredLinks.length === 0) {
+            return (
+                <NoLinksMessage>
+                    <FaSadTear className="icon" />
+                    No links to display <br /> Add one now
+                </NoLinksMessage>
+            );
         }
 
-        .card-title,
-        .card-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .d-flex {
-            margin-top: 10px;
-        }
-    `;
-
-    const EditButton = styled(BsPencilSquare)`
-        cursor: pointer;
-        margin-right: 15px;
-    `;
-
-    const DeleteButton = styled(BsTrash)`
-        cursor: pointer;
-    `;
+        return filteredLinks.reverse().map((link) => (
+            <LinkCard
+                key={link._id}
+                link={link}
+                setEditingLink={setEditingLink}
+                setShowEditModal={setShowEditModal}
+                setShowDeleteModal={setShowDeleteModal}
+                setLinkToDelete={setLinkToDelete}
+                Card={Card}
+                EditButton={EditButton}
+                DeleteButton={DeleteButton}
+            />
+        ));
+    };
 
     return (
         <div className="container">
@@ -97,35 +150,11 @@ const ManageLinks = () => {
             <div className="d-none d-lg-flex flex-row row">
                 <div className="col-md-6">
                     <h2 style={{ fontWeight: '600' }}>Your Profiles</h2>
-                    {links.filter(link => !link.social).reverse().map(link => (
-                        <LinkCard
-                            key={link._id}
-                            link={link}
-                            setEditingLink={setEditingLink}
-                            setShowEditModal={setShowEditModal}
-                            setShowDeleteModal={setShowDeleteModal}
-                            setLinkToDelete={setLinkToDelete}
-                            Card={Card}
-                            EditButton={EditButton}
-                            DeleteButton={DeleteButton}
-                        />
-                    ))}
+                    {renderLinks(links.filter(link => !link.social))}
                 </div>
                 <div className="col-md-6">
                     <h2 style={{ fontWeight: '600' }}>Social Handles</h2>
-                    {links.filter(link => link.social).reverse().map(link => (
-                        <LinkCard
-                            key={link._id}
-                            link={link}
-                            setEditingLink={setEditingLink}
-                            setShowEditModal={setShowEditModal}
-                            setShowDeleteModal={setShowDeleteModal}
-                            setLinkToDelete={setLinkToDelete}
-                            Card={Card}
-                            EditButton={EditButton}
-                            DeleteButton={DeleteButton}
-                        />
-                    ))}
+                    {renderLinks(links.filter(link => link.social))}
                 </div>
             </div>
 
@@ -160,33 +189,9 @@ const ManageLinks = () => {
                 </div>
                 <div>
                     {showSocial === false ? (
-                        links.filter(link => !link.social).reverse().map(link => (
-                            <LinkCard
-                                key={link._id}
-                                link={link}
-                                setEditingLink={setEditingLink}
-                                setShowEditModal={setShowEditModal}
-                                setShowDeleteModal={setShowDeleteModal}
-                                setLinkToDelete={setLinkToDelete}
-                                Card={Card}
-                                EditButton={EditButton}
-                                DeleteButton={DeleteButton}
-                            />
-                        ))
+                        renderLinks(links.filter(link => !link.social))
                     ) : (
-                        links.filter(link => link.social).reverse().map(link => (
-                            <LinkCard
-                                key={link._id}
-                                link={link}
-                                setEditingLink={setEditingLink}
-                                setShowEditModal={setShowEditModal}
-                                setShowDeleteModal={setShowDeleteModal}
-                                setLinkToDelete={setLinkToDelete}
-                                Card={Card}
-                                EditButton={EditButton}
-                                DeleteButton={DeleteButton}
-                            />
-                        ))
+                        renderLinks(links.filter(link => link.social))
                     )}
                 </div>
             </div>

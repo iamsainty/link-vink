@@ -11,7 +11,7 @@ const EditLink = ({ showModal, setShowModal, link, setEditingLink, handleSaveLin
 
     return (
         <Modal show={showModal} onHide={handleCancelEdit} centered>
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title style={{ fontWeight: 'bold' }}>Edit Link</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -66,7 +66,8 @@ const EditLink = ({ showModal, setShowModal, link, setEditingLink, handleSaveLin
                                 width: '100%',
                                 backgroundImage: 'linear-gradient(to right, #753a88, #a13373)',
                                 border: '0',
-                                borderRadius: '1vh'
+                                borderRadius: '1vh',
+                                fontSize: '2vh'
                             }}
                             onClick={handleCancelEdit}
                         >
@@ -79,7 +80,8 @@ const EditLink = ({ showModal, setShowModal, link, setEditingLink, handleSaveLin
                                 width: '100%',
                                 backgroundImage: 'linear-gradient(to right, #a13373, #cc2b5e)',
                                 border: '0',
-                                borderRadius: '1vh'
+                                borderRadius: '1vh',
+                                fontSize: '2vh'
                             }}
                             onClick={handleSaveLink}
                         >
