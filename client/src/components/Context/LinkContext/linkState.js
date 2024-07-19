@@ -1,46 +1,40 @@
 import { useState, useEffect } from "react";
 import LinkContext from "./linkContext";
-import { useNavigate } from "react-router-dom";
 
 const LinkState = (props) => {
     const host = "http://localhost:5005";
-    const navigate = useNavigate();
 
     const [links, setLinks] = useState([]);
     const [fetchComplete, setFetchComplete] = useState(false);
-
-    const fetchLinks = async () => {
-        const token = localStorage.getItem('authtoken');
-        if (!token) {
-            navigate('/login');
-        } else {
-            try {
-                const response = await fetch(`${host}/link/links`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "authtoken": token
-                    },
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    setLinks(data.links);
-                } else {
-                    console.error('Failed to fetch links:', data.message);
-                }
-                setFetchComplete(true);
-            } catch (error) {
-                console.error("Error fetching links:", error);
+    
+    const fetchLinks = async (username) => {
+        try {
+            const response = await fetch(`${host}/link/links/${username}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setLinks(data.links);
+            } else {
+                console.error('Failed to fetch links:', data.message);
             }
+            setFetchComplete(true);
+        } catch (error) {
+            console.error("Error fetching links:", error);
         }
     };
+
+    const username = localStorage.getItem('username'); // get username from local storage
 
     useEffect(() => {
         if (!fetchComplete) {
             fetchLinks();
         }
         // eslint-disable-next-line
-    }, [fetchComplete]);
+    }, [fetchComplete, username]);
 
     const addLink = async (link) => {
         try {

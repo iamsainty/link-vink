@@ -27,6 +27,7 @@ const AuthState = (props) => {
                     const data = await response.json();
                     if (response.ok) {
                         setUser(data.data);
+                        localStorage.setItem('username', data.data.username)
                         setIsAuthenticated(true);
                     } else {
                         console.error('Failed to load user:', data.message);
@@ -36,8 +37,6 @@ const AuthState = (props) => {
                     console.error('Error loading user:', err);
                     setError('Failed to load user');
                 }
-            } else {
-                console.error('No auth token found');
             }
             setLoading(false);
         };
@@ -63,6 +62,7 @@ const AuthState = (props) => {
                 setUser(data.data);
                 setIsAuthenticated(true);
                 navigate('/admin');
+                window.location.reload();
             } else {
                 setError(data.message || 'Failed to login');
             }
@@ -89,6 +89,7 @@ const AuthState = (props) => {
                 setUser(data.user);
                 setIsAuthenticated(true);
                 navigate('/admin');
+                window.location.reload();
             } else {
                 setError(data.message || 'Failed to register');
             }
