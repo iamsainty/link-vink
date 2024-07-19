@@ -8,7 +8,7 @@ const LinkCard = ({
     setLinkToDelete,
     Card,
     EditButton,
-    DeleteButton
+    DeleteButton,
 }) => {
     const truncateText = (text, maxLength) => {
         if (text.length > maxLength) {
@@ -16,6 +16,7 @@ const LinkCard = ({
         }
         return text;
     };
+    
 
     return (
         <Card>
