@@ -22,6 +22,10 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (credentials.username.toLowerCase() === 'admin') {
+      setMsg('The username "admin" cannot be used.');
+      return;
+    }
     if (!validateUsername(credentials.username)) {
       setMsg('Username should have 4 to 20 characters of only lowercase alphabets and numbers.');
       return;
@@ -63,6 +67,10 @@ function Register() {
   }, [navigate]);
 
   const checkUsernameAvailability = async (username) => {
+    if (username.toLowerCase() === 'admin') {
+      setMsg('The username "admin" cannot be used.');
+      return;
+    }
     if (!validateUsername(username)) {
       setMsg('Username: 4-20 chars, lowercase, numbers.');
       return;
