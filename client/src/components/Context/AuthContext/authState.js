@@ -3,7 +3,7 @@ import AuthContext from './authContext';
 import { useNavigate } from 'react-router-dom';
 
 const AuthState = (props) => {
-    const host = "http://localhost:5005";
+    const host = 'https://link-vink-server.vercel.app';
     const navigate = useNavigate();
 
     const [user, setUser] = useState(null);

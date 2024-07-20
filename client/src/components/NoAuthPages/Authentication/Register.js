@@ -8,7 +8,7 @@ function Register() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  const host = "http://localhost:5005";
+  const host = 'https://link-vink-server.vercel.app';
 
   const validateUsername = (username) => {
     const usernameRegex = /^[a-z0-9]{4,20}$/;

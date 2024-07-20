@@ -10,6 +10,9 @@ const UserProfile = () => {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [userExists, setUserExists] = useState(false); // State to check if user exists
+
+    const host = 'https://link-vink-server.vercel.app';
+
     
     useEffect(() => {
         if (username === 'admin') {
@@ -20,7 +23,7 @@ const UserProfile = () => {
 
         const fetchUserProfile = async () => {
             try {
-                const userDetailsResponse = await fetch(`http://localhost:5005/auth/user/${username}`);
+                const userDetailsResponse = await fetch(`${host}/auth/user/${username}`);
 
                 const userData = await userDetailsResponse.json();
                 if (userData.exists) {

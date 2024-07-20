@@ -5,12 +5,14 @@ const UserIntro = (props) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const host = 'https://link-vink-server.vercel.app';
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const username = props.username;
                 // Fetch user details
-                const userDetailsResponse = await fetch(`http://localhost:5005/auth/user/${username}`, {
+                const userDetailsResponse = await fetch(`${host}/auth/user/${username}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

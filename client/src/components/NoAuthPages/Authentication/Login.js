@@ -8,7 +8,7 @@ function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  const host = "http://localhost:5005";
+  const host = 'https://link-vink-server.vercel.app';
 
   const handleSubmit = async (e) => {
     e.preventDefault();

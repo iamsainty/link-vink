@@ -60,7 +60,7 @@ function UserLinks(props) {
     const [links, setLinks] = useState([]);
     const username = props.username;
 
-    const host = 'http://localhost:5005';
+    const host = 'https://link-vink-server.vercel.app';
 
     useEffect(() => {
         const fetchLinks = async () => {

@@ -13,6 +13,8 @@ const MainIntro = () => {
 
   const { user, isAuthenticated } = useContext(AuthContext);
 
+  const host = 'https://link-vink-server.vercel.app';
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -21,7 +23,7 @@ const MainIntro = () => {
         setTotalProfileViews(userData.profileViews);
 
         // Fetch user's links
-        const linksResponse = await fetch(`http://localhost:5005/link/links/${userData.username}`, {
+        const linksResponse = await fetch(`${host}/link/links/${userData.username}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -63,7 +65,7 @@ const MainIntro = () => {
   }, []);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(`https://link-vink.in/${user.username}`)
+    navigator.clipboard.writeText(`https://link-vink.vercel.app/${user.username}`)
       .then(() => {
         setCopySuccess(true);
         setTimeout(() => {
@@ -102,7 +104,7 @@ const MainIntro = () => {
           </div>
           <div className="col-md-auto" style={{ fontSize: '2.5vh', backgroundColor: '#e9e9e9', borderRadius: '5vh', padding: '1.75vh', width: 'auto' }}>
             <Link to={`/${user.username}`} style={{ textDecoration: 'none' }}>
-              &nbsp; https://link-vink.in/{user.username} &nbsp;
+              &nbsp; https://link-vink.vercel.app/{user.username} &nbsp;
             </Link>
             <span className="copy-icon" style={{ cursor: 'pointer' }} onClick={copyToClipboard}>
               {copySuccess ? <FiCheck /> : <FiCopy />}
@@ -148,7 +150,7 @@ const MainIntro = () => {
             justifyContent: 'center'
           }}>
             <Link to={`/${user.username}`} style={{ textDecoration: 'none', color: '#333', wordBreak: 'break-all' }}>
-              https://link-vink.in/{user.username}
+              https://link-vink.vercel.app/{user.username}
             </Link>
             <span className="copy-icon" style={{ cursor: 'pointer', marginLeft: '1vw' }} onClick={copyToClipboard}>
               {copySuccess ? <FiCheck /> : <FiCopy />}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import LinkContext from "./linkContext";
 
 const LinkState = (props) => {
-    const host = "http://localhost:5005";
+    const host = 'https://link-vink-server.vercel.app';
 
     const [links, setLinks] = useState([]);
     const [fetchComplete, setFetchComplete] = useState(false);
