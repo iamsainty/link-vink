@@ -8,7 +8,6 @@ const EditLink = ({ showModal, setShowModal, link, setEditingLink, handleSaveLin
         setEditingLink({ ...link, [e.target.name]: e.target.value });
     };
 
-
     return (
         <Modal show={showModal} onHide={handleCancelEdit} centered>
             <Modal.Header>
@@ -16,36 +15,16 @@ const EditLink = ({ showModal, setShowModal, link, setEditingLink, handleSaveLin
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    {link.social === false ?
-                        <Form.Group controlId="formTitle">
-                            <Form.Control
-                                type="text"
-                                placeholder="Title"
-                                name="title"
-                                value={link.title}
-                                onChange={handleChange}
-                                style={{ marginBottom: '2vh' }}
-                            />
-                        </Form.Group> :
-                        <Form.Group controlId="formPlatform">
-                            <Form.Control
-                                as="select"
-                                name="title"
-                                value={link.title}
-                                onChange={handleChange}
-                                style={{ marginBottom: '2vh' }}
-                            >
-                                <option value="">Select platform</option>
-                                <option value="Whatsapp">WhatsApp</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Twitter/X">Twitter/X</option>
-                                <option value="Gmail">Gmail</option>
-                                <option value="Linkedin">LinkedIn</option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="Telegram">Telegram</option>
-                            </Form.Control>
-                        </Form.Group>
-                    }
+                    <Form.Group controlId="formTitle">
+                        <Form.Control
+                            type="text"
+                            placeholder="Title"
+                            name="title"
+                            value={link.title}
+                            onChange={handleChange}
+                            style={{ marginBottom: '2vh' }}
+                        />
+                    </Form.Group>
                     <Form.Group controlId="formURL">
                         <Form.Control
                             type="text"
