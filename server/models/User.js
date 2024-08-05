@@ -19,6 +19,28 @@ const userSchema = mongoose.Schema(
             type: Number,
             default: 0,
         },
+        socialHandles: {
+            whatsapp: {
+                type: String,
+                default: null,
+            },
+            instagram: {
+                type: String,
+                default: null,
+            },
+            x: {
+                type: String,
+                default: null,
+            },
+            telegram: {
+                type: String,
+                default: null,
+            },
+            snapchat: {
+                type: String,
+                default: null,
+            },
+        },
     },
     {
         timestamps: true,

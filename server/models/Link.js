@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 
 const linkSchema = mongoose.Schema(
     {
-        username: {
-            type: String,
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: true,
         },
         title: {
@@ -12,10 +13,6 @@ const linkSchema = mongoose.Schema(
         },
         url: {
             type: String,
-            required: true,
-        },
-        social: {
-            type: Boolean,
             required: true,
         },
         clickCount: {
