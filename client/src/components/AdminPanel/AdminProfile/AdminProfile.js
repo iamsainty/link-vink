@@ -7,6 +7,7 @@ import ManageLinks from "./CRUDoperations/ManageLinks";
 import UserStats from "./UserStats";
 import UserSocial from "./UserSocial";
 import EditProfile from "./EditProfile";
+import AdminFooter from "./AdminFooter";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -33,6 +34,7 @@ function AdminProfile() {
         <EditProfile />
         <UserStats />
       </Container>
+      <AdminFooter />
     </>
   );
 }

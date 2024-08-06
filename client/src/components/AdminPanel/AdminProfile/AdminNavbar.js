@@ -1,79 +1,146 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
-import LinkIcon from '@mui/icons-material/AddLink';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Link as ScrollLink } from "react-scroll";
+import { FaHome, FaLink, FaChartBar, FaSignOutAlt } from "react-icons/fa";
+import styled from "styled-components";
+
+const Navbar = styled.nav`
+  background: linear-gradient(to right, #753a88, #cc2b5e);
+  height: 7vh;
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const NavLink = styled(Link)`
+  color: #ffffff;
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+  &:hover {
+    color: #ffffff; /* Maintain the text color on hover */
+    text-decoration: none; /* Maintain no underline on hover */
+    cursor: pointer; /* Change the cursor to pointer */
+  }
+`;
+
+const NavScrollLink = styled(ScrollLink)`
+  color: #ffffff;
+  text-decoration: none;
+  margin-right: 5vh;
+  &:hover {
+    color: #ffffff; /* Maintain the text color on hover */
+    text-decoration: none; /* Maintain no underline on hover */
+    cursor: pointer; /* Change the cursor to pointer */
+  }
+`;
+
+const NavIcon = styled.div`
+  color: #ffffff;
+  text-align: center;
+`;
+
+const DesktopNav = styled.div`
+  display: none;
+  @media (min-width: 992px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+`;
+
+const MobileNav = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  @media (min-width: 992px) {
+    display: none;
+  }
+`;
+
+const Brand = styled(Link)`
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 5vh;
+  &:hover {
+    color: #ffffff; /* Maintain the text color on hover */
+    text-decoration: none; /* Maintain no underline on hover */
+    cursor: pointer; /* Change the cursor to pointer */
+  }
+`;
 
 function AdminNavbar() {
+  const handleLogout = (navigate) => {
+    localStorage.removeItem("authtoken");
+    navigate("/");
+    window.location.reload();
+  };
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  return (
+    <Navbar className="navbar navbar-expand-lg">
+      <MobileNav>
+        <NavItem>
+          <NavLink to="/admin">
+            <NavIcon>
+              <FaHome />
+            </NavIcon>
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink to="/admin">
+            <NavIcon>
+              <FaLink />
+            </NavIcon>
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink to="/admin">
+            <NavIcon>
+              <FaChartBar />
+            </NavIcon>
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink to="/" onClick={() => handleLogout(navigate)}>
+            <NavIcon>
+              <FaSignOutAlt />
+            </NavIcon>
+          </NavLink>
+        </NavItem>
+      </MobileNav>
 
-    const handlelogout = () => {
-        localStorage.removeItem('username');
-        localStorage.removeItem('authtoken')
-        navigate('/');
-        window.location.reload();
-    }
-
-    return (
-        <nav className="navbar navbar-expand-lg" style={{ background: 'linear-gradient(to right, #753a88, #cc2b5e)' }}>
-            <div className="navbar-nav d-lg-none w-100 d-flex justify-content-evenly flex-row">
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <HomeIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <LinkIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <AssessmentIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/" onClick={handlelogout} className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <ExitToAppIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-            </div>
-
-
-            <div className="d-none d-lg-flex navbar-nav w-100 row">
-                <div className="col d-flex align-items-center ml-5">
-                    <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 'bold' }}>
-                        Link Vink
-                    </Link>
-                </div>
-                <div className="col-md-auto d-none d-lg-flex d-flex justify-content-end">
-                    <div className="nav-item">
-                        <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Home
-                        </Link>
-                    </div>
-                    <div className="nav-item">
-                        <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Links
-                        </Link>
-                    </div>
-                    <div className="nav-item">
-                        <Link to="/admin" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Stats
-                        </Link>
-                    </div>
-                    <div className="nav-item">
-                        <Link to="/" className="nav-link text-center" onClick={handlelogout} style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh', marginRight: '5vh' }}>
-                            Logout
-                        </Link>
-                    </div>
-                </div>
-            </div>
-
-        </nav>
-    );
+      <DesktopNav>
+        <Brand to="/admin">Link Vink</Brand>
+        <div>
+          <NavScrollLink to="manage-links" smooth duration={500}>
+            Links
+          </NavScrollLink>
+          <NavScrollLink to="manage-social" smooth duration={500}>
+            Social
+          </NavScrollLink>
+          <NavScrollLink to="edit-profile" smooth duration={500}>
+            Profile
+          </NavScrollLink>
+          <NavScrollLink to="stats" smooth duration={500}>
+            Stats
+          </NavScrollLink>
+          <NavLink
+            to="/"
+            onClick={() => handleLogout(navigate)}
+            style={{ marginRight: "5vh" }}
+          >
+            Logout
+          </NavLink>
+        </div>
+      </DesktopNav>
+    </Navbar>
+  );
 }
 
 export default AdminNavbar;
