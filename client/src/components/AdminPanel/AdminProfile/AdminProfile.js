@@ -1,34 +1,39 @@
-import React, { useContext, useEffect } from 'react';
-import AdminNavbar from './AdminNavbar';
-import MainIntro from './MainIntro';
-import ManageLinks from './CRUDoperations/ManageLinks';
-import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../Context/AuthContext/authContext';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import AdminNavbar from "./AdminNavbar";
+import MainIntro from "./MainIntro";
+import ManageLinks from "./CRUDoperations/ManageLinks";
+import UserStats from "./UserStats";
+import UserSocial from "./UserSocial";
+import EditProfile from "./EditProfile";
+
+const Container = styled.div`
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 15px;
+`;
 
 function AdminProfile() {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (!localStorage.getItem('authtoken')) {
-        navigate('/login');
-      } else {
-        const userdata = user;
-        if (user !== null) {
-          localStorage.setItem('username', userdata.username);
-        }
-      }
-    };
-    fetchUser();
-  }, [navigate, user]); // Include `user` in the dependency array
+    if (!localStorage.getItem("authtoken")) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   return (
-    <div>
+    <>
       <AdminNavbar />
-      <MainIntro />
-      <ManageLinks />
-    </div>
+      <Container>
+        <MainIntro />
+        <ManageLinks />
+        <UserSocial />
+        <EditProfile />
+        <UserStats />
+      </Container>
+    </>
   );
 }
 

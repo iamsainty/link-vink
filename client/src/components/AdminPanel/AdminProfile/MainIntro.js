@@ -1,178 +1,289 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import AuthContext from '../../Context/AuthContext/authContext';
-import { FiCopy, FiCheck } from 'react-icons/fi';
-import Loading from '../../UIcomponent/Loading';
+import React, { useEffect, useContext, useState } from "react";
+import styled from "styled-components";
+import AuthContext from "../../Context/AuthContext/authContext";
+import Loading from "../../UIcomponent/Loading";
+import {
+  FaUserEdit,
+  FaTasks,
+  FaChartBar,
+  FaHeart,
+  FaExclamationTriangle,
+  FaCopy,
+  FaCheck,
+} from "react-icons/fa";
+import { Link as ScrollLink } from "react-scroll";
+import { Link } from "react-router-dom";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+`;
+
+const Greeting = styled.h1`
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+  }
+`;
+
+const Username = styled.h2`
+  font-size: 3rem;
+  font-weight: 700;
+  background-image: linear-gradient(to right, #753a88, #cc2b5e);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin: 1rem 0;
+  @media (max-width: 768px) {
+    font-size: 2.25rem;
+  }
+`;
+
+const WelcomeMessage = styled.p`
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0.5rem 0 2rem;
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const ActionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 60vw;
+  margin-top: 5vh;
+
+  @media (max-width: 768px) {
+    width: 90vw;
+  }
+`;
+
+const ActionButton = styled(ScrollLink)`
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    span {
+      display: none;
+    }
+  }
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to right, #753a88, #cc2b5e);
+  -webkit-background-clip: text;
+  color: transparent;
+  padding: 2rem;
+  border-radius: 8px;
+
+  svg {
+    color: #753a88;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-weight: 10rem;
+    font-size: 3rem;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0 0;
+  }
+`;
+
+const LinkSection = styled.div`
+  display: flex;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-top: 20px;
+`;
+
+const ProfileCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90vw;
+  margin: 1rem 0;
+
+  p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+  }
+
+  a {
+    font-size: 1rem;
+    color: #753a88;
+    text-decoration: none;
+    margin-left: 20px;
+    @media (max-width: 768px) {
+      margin-right: 20px;
+    }
+  }
+
+  .copy-button {
+    background-color: black;
+    border-radius: 15px;
+    height: 100%;
+    border: none;
+    color: white;
+    padding: 0 20px;
+    font-size: 1rem;
+    transition: background 0.3s;
+    margin-left: 1rem;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+`;
 
 const MainIntro = () => {
-  const [totalProfileViews, setTotalProfileViews] = useState(0);
-  const [totalLinkClicks, setTotalLinkClicks] = useState(0);
-  const [copySuccess, setCopySuccess] = useState(false);
-  const [greeting, setGreeting] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  const { user, isAuthenticated } = useContext(AuthContext);
-
-  const host = 'https://link-vink-server.vercel.app';
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = user;
-        localStorage.setItem('username', userData.username);
-        setTotalProfileViews(userData.profileViews);
-
-        // Fetch user's links
-        const linksResponse = await fetch(`${host}/link/links/${userData.username}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!linksResponse.ok) {
-          throw new Error('Failed to fetch user links');
-        }
-
-        const linksData = await linksResponse.json();
-        const totalClicks = linksData.links.reduce((acc, link) => acc + link.clickCount, 0);
-        setTotalLinkClicks(totalClicks);
-
-        // Wait for at least 1 second
-        await new Promise(resolve => setTimeout(resolve, 750));
-        setLoading(false);
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false); // Handle the error case and stop loading
-      }
-    };
-
-    if (isAuthenticated) {
-      fetchUserData();
-    }
-  }, [user, isAuthenticated]);
+  const [greeting, setGreeting] = useState("");
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [copyStatus, setCopyStatus] = useState(false);
+  const { user, loadUser, loading, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const currentTime = new Date().getHours();
     if (currentTime < 12) {
-      setGreeting('Good morning !!');
+      setGreeting("Good morning!");
     } else if (currentTime < 18) {
-      setGreeting('Good afternoon !!');
+      setGreeting("Good afternoon!");
     } else {
-      setGreeting('Good evening !!');
+      setGreeting("Good evening!");
     }
   }, []);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(`https://link-vink.vercel.app/${user.username}`)
-      .then(() => {
-        setCopySuccess(true);
-        setTimeout(() => {
-          setCopySuccess(false);
-        }, 1000); // Reset copy success state after 1 second
-      })
-      .catch(err => console.error('Failed to copy:', err));
+  useEffect(() => {
+    loadUser();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 10000); // 10 seconds
+    } else {
+      setLoadingTimeout(false);
+    }
+
+    return () => clearTimeout(timer);
+  }, [loading]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`link-vink.vercel.app/u/${user.username}`);
+    setCopyStatus(true);
+    setTimeout(() => {
+      setCopyStatus(false);
+    }, 1500);
   };
 
   if (loading) {
+    if (loadingTimeout) {
+      return (
+        <Container>
+          <ErrorMessage>
+            <FaExclamationTriangle />
+            <h2>Oops!</h2>
+            <p>
+              Loading is taking too long. Please try refreshing the page, there
+              might be a network issue.
+            </p>
+          </ErrorMessage>
+        </Container>
+      );
+    }
     return (
-      <div style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container>
         <Loading />
-      </div>
+      </Container>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return (
+      <Container>
+        <h1>Please log in to access your dashboard.</h1>
+      </Container>
     );
   }
 
   return (
-    <>
-      {/* Large Screen Layout */}
-      <div className="d-none d-lg-block container" style={{ marginTop: '10vh' }}>
-        <h1 style={{ fontWeight: 'bold', fontSize: '5vh' }}>
-          {greeting}
-        </h1>
-        <h1 style={{
-          fontSize: '7vh',
-          fontWeight: '900',
-          backgroundImage: 'linear-gradient(to right, #753a88, #cc2b5e)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          marginBottom: '5vh'
-        }}>{user.name}</h1>
-        <div className="row align-items-center mb-5">
-          <div className="col-md-auto" style={{ fontSize: '3vh', padding: '1.5vh' }}>
-            Your Link Vink profile:
-          </div>
-          <div className="col-md-auto" style={{ fontSize: '2.5vh', backgroundColor: '#e9e9e9', borderRadius: '5vh', padding: '1.75vh', width: 'auto' }}>
-            <Link to={`/${user.username}`} style={{ textDecoration: 'none' }}>
-              &nbsp; https://link-vink.vercel.app/{user.username} &nbsp;
+    <Container>
+      <Greeting>{greeting}</Greeting>
+      <Username>{user.name}</Username>
+      <WelcomeMessage>
+        Welcome back! We're excited to have you here. <br />
+        Manage your links, update your profile, check your stats, and more!
+      </WelcomeMessage>
+      <ProfileCard>
+        <p>Copy & Share Your Link Vink URL</p>
+        <LinkSection>
+          <p>
+            <Link to={`/u/${user.username}`}>
+              link-vink.vercel.app/u/{user.username}
             </Link>
-            <span className="copy-icon" style={{ cursor: 'pointer' }} onClick={copyToClipboard}>
-              {copySuccess ? <FiCheck /> : <FiCopy />}
-            </span>
-          </div>
-        </div>
-        <p className="lead" style={{ fontSize: '3vh', fontWeight: '350' }}>You are growing through Link Vink!</p>
-        <p className="lead" style={{ fontSize: '3vh', fontWeight: '350' }}>Your profile got <strong>{totalProfileViews}</strong> profile views and <strong>{totalLinkClicks}</strong> link clicks.</p>
-        <Link to="/stats">
-          <button className="btn btn-lg" style={{ background: 'linear-gradient(to right, #753a88, #cc2b5e)', color: '#fff', border: 'none', padding: '1.25vh', fontSize: '2.5vh', borderRadius: '1vh', marginTop: '5vh', marginBottom: '5vh' }}>&nbsp; View more stats &nbsp;</button>
-        </Link>
-      </div>
-
-      {/* Small Screen Layout */}
-      <div className="d-lg-none container" style={{ marginTop: '5vh' }}>
-        <h1 style={{ fontWeight: 'bold', fontSize: '4vh', textAlign: 'center' }}>
-          {greeting}
-        </h1>
-        <h1 style={{
-          fontSize: '7vw',
-          fontWeight: '900',
-          backgroundImage: 'linear-gradient(to right, #753a88, #cc2b5e)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          marginBottom: '3vh',
-          textAlign: 'center'
-        }}>{user.name}</h1>
-        <div className="row align-items-center mb-4">
-          <div className='col-12' style={{ fontSize: '4vw', padding: '2vw', textAlign: 'center', width: 'auto', margin: '0 auto' }}>
-            Your Link Vink profile:
-          </div>
-          <div style={{
-            fontSize: '3.5vw',
-            backgroundColor: '#f5f5f5',
-            borderRadius: '1rem',
-            padding: '1.5vh',
-            textAlign: 'center',
-            width: 'auto',
-            margin: '0 auto',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <Link to={`/${user.username}`} style={{ textDecoration: 'none', color: '#333', wordBreak: 'break-all' }}>
-              https://link-vink.vercel.app/{user.username}
-            </Link>
-            <span className="copy-icon" style={{ cursor: 'pointer', marginLeft: '1vw' }} onClick={copyToClipboard}>
-              {copySuccess ? <FiCheck /> : <FiCopy />}
-            </span>
-          </div>
-        </div>
-        <p className="lead" style={{ fontSize: '4vw', fontWeight: '350', textAlign: 'center' }}>You are growing through Link Vink!</p>
-        <p className="lead" style={{ fontSize: '4vw', fontWeight: '350', textAlign: 'center' }}>Your profile got <strong>{totalProfileViews}</strong> profile views and <strong>{totalLinkClicks}</strong> link clicks.</p>
-        <Link to="/stats">
-          <button className="btn btn-lg btn-block" style={{
-            background: 'linear-gradient(to right, #753a88, #cc2b5e)',
-            color: '#fff',
-            border: 'none',
-            padding: '2vw',
-            fontSize: '4vw',
-            borderRadius: '1rem',
-            marginTop: '5vh',
-            marginBottom: '5vh'
-          }}>&nbsp; View more stats &nbsp;</button>
-        </Link>
-      </div>
-    </>
+          </p>
+          <button className="copy-button" onClick={handleCopy}>
+            {copyStatus ? <FaCheck /> : <FaCopy />}
+          </button>
+        </LinkSection>
+      </ProfileCard>
+      <ActionContainer>
+        <ActionButton
+          to="manage-links"
+          smooth={true}
+          duration={500}
+          className="btn btn-outline-dark"
+        >
+          <FaTasks /> <span>Manage Links</span>
+        </ActionButton>
+        <ActionButton
+          to="manage-social"
+          smooth={true}
+          duration={500}
+          className="btn btn-outline-dark"
+        >
+          <FaHeart /> <span>Social Handles</span>
+        </ActionButton>
+        <ActionButton
+          to="edit-profile"
+          smooth={true}
+          duration={500}
+          className="btn btn-outline-dark"
+        >
+          <FaUserEdit /> <span>Edit Profile</span>
+        </ActionButton>
+        <ActionButton
+          to="stats"
+          smooth={true}
+          duration={500}
+          className="btn btn-outline-dark"
+        >
+          <FaChartBar /> <span>View Stats</span>
+        </ActionButton>
+      </ActionContainer>
+    </Container>
   );
 };
 

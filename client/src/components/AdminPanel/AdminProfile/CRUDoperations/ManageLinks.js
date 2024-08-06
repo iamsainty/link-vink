@@ -93,7 +93,8 @@ const LinksContainer = styled.div`
 `;
 
 const ManageLinks = () => {
-  const { links, fetchLinks, deleteLink, editLink } = useContext(LinkContext);
+  const { links, userlinkcount, fetchLinks, deleteLink, editLink } =
+    useContext(LinkContext);
   const { user, loadUser } = useContext(AuthContext);
   const [editingLink, setEditingLink] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -101,20 +102,17 @@ const ManageLinks = () => {
   const [linkToDelete, setLinkToDelete] = useState(null);
 
   useEffect(() => {
-    loadUser();
+    const fetchUserLinks = async () => {
+      if (user) {
+        await fetchLinks(user._id);
+      }
+      else{
+        loadUser();
+      }
+    };
+    fetchUserLinks();
     // eslint-disable-next-line
-  }, []);
-
-useEffect(() => {
-  const fetchUserLinks = async () => {
-    if (user) {
-      await fetchLinks(user._id);
-    }
-  };
-
-  fetchUserLinks();
-  // eslint-disable-next-line
-}, [user]);
+  }, [user]);
 
   const handleSaveLink = () => {
     if (!editingLink.title || !editingLink.url) {
@@ -139,7 +137,7 @@ useEffect(() => {
   };
 
   const renderLinks = (links) => {
-    if (links.length === 0) {
+    if (userlinkcount === 0) {
       return (
         <NoLinksMessage>
           <FaSadTear className="icon" />
@@ -148,7 +146,7 @@ useEffect(() => {
       );
     }
 
-    return links.reverse().map((link) => (
+    return links.map((link) => (
       <Card key={link._id}>
         <div className="card">
           <div className="card-body">

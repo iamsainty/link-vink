@@ -15,7 +15,7 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
   width: 100%;
   @media (max-width: 768px) {
     flex-direction: column;
@@ -104,51 +104,13 @@ const SaveButton = styled.button`
   padding: 8px 12px;
   font-size: 13px;
   border-radius: 4px;
-  cursor: pointer;
 `;
 
-const socialMediaData = [
-  {
-    id: 1,
-    icon: <FaWhatsapp />,
-    domain: "https://wa.me/",
-    placeholder: "+91xxxxxxxxxx",
-    themecolor: "#25D366",
-    key: "whatsapp",
-  },
-  {
-    id: 2,
-    icon: <FaInstagram />,
-    domain: "https://instagram.com/",
-    placeholder: "username",
-    themecolor: "#E1306C",
-    key: "instagram",
-  },
-  {
-    id: 3,
-    icon: <FaTwitter />,
-    domain: "https://twitter.com/",
-    placeholder: "username",
-    themecolor: "#1DA1F2",
-    key: "x",
-  },
-  {
-    id: 4,
-    icon: <FaTelegramPlane />,
-    domain: "https://t.me/",
-    placeholder: "username",
-    themecolor: "#0088cc",
-    key: "telegram",
-  },
-  {
-    id: 5,
-    icon: <FaSnapchatGhost />,
-    domain: "https://snapchat.com/add/",
-    placeholder: "username",
-    themecolor: "#FFFC00",
-    key: "snapchat",
-  },
-];
+const ErrorText = styled.p`
+  color: red;
+  font-size: 12px;
+  margin-left: 10px;
+`;
 
 function UserSocial() {
   const { user, loadUser, updatesocial } = useContext(AuthContext);
@@ -160,6 +122,7 @@ function UserSocial() {
     telegram: "",
     snapchat: "",
   });
+  const [errors, setErrors] = useState({}); // State for errors
 
   useEffect(() => {
     loadUser();
@@ -167,7 +130,7 @@ function UserSocial() {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.socialHandles) {
       setHandles({
         whatsapp: user.socialHandles.whatsapp || "",
         instagram: user.socialHandles.instagram || "",
@@ -175,8 +138,17 @@ function UserSocial() {
         telegram: user.socialHandles.telegram || "",
         snapchat: user.socialHandles.snapchat || "",
       });
+    } else {
+      setHandles({
+        whatsapp: "",
+        instagram: "",
+        x: "",
+        telegram: "",
+        snapchat: "",
+      });
     }
   }, [user]);
+  
 
   const handleChange = (e, key) => {
     setHandles({ ...handles, [key]: e.target.value });
@@ -184,11 +156,13 @@ function UserSocial() {
 
   const saveHandle = async (key) => {
     setLoading((prev) => ({ ...prev, [key]: true }));
+    setErrors((prev) => ({ ...prev, [key]: null })); // Reset error state for this key
     try {
-      await updatesocial({ [key]: handles[key] });
+      await updatesocial(handles);
       setLoading((prev) => ({ ...prev, [key]: false }));
     } catch (error) {
       console.error(error);
+      setErrors((prev) => ({ ...prev, [key]: "Failed to save. Please try again." }));
       setLoading((prev) => ({ ...prev, [key]: false }));
     }
   };
@@ -198,40 +172,124 @@ function UserSocial() {
       <LeftColumn>
         <Title>Social Handles</Title>
         <Description>
-          Add your social media handles to keep all your connections in one
-          place.
+          Add your social media handles to keep all your connections in one place.
         </Description>
       </LeftColumn>
       <RightColumn>
-        {socialMediaData.map((item) => (
-          <Card key={item.id}>
-            <IconWrapper
-              themecolor={item.themecolor}
-              hashandle={handles[item.key]}
-            >
-              {item.icon}
-            </IconWrapper>
-            <Domain>{item.domain}</Domain>
-            <Input
-              type="text"
-              placeholder={item.placeholder}
-              value={handles[item.key]}
-              onChange={(e) => handleChange(e, item.key)}
-            />
-            {loading[item.key] ? (
-              <div>
-                <Loading /> {/* Render the loader component */}
-              </div>
-            ) : (
-              <SaveButton
-                className="btn btn-outline-dark"
-                onClick={() => saveHandle(item.key)}
-              >
-                Save
-              </SaveButton>
-            )}
-          </Card>
-        ))}
+        <Card>
+          <IconWrapper themecolor="#25D366" hashandle={handles.whatsapp}>
+            <FaWhatsapp />
+          </IconWrapper>
+          <Domain>https://wa.me/</Domain>
+          <Input
+            type="text"
+            placeholder="+91xxxxxxxxxx"
+            value={handles.whatsapp}
+            onChange={(e) => handleChange(e, "whatsapp")}
+          />
+          {loading.whatsapp ? (
+            <div>
+              <Loading /> {/* Render the loader component */}
+            </div>
+          ) : (
+            <SaveButton className="btn btn-outline-dark" onClick={() => saveHandle("whatsapp")}>
+              Save
+            </SaveButton>
+          )}
+          {errors.whatsapp && <ErrorText>{errors.whatsapp}</ErrorText>} {/* Display error message */}
+        </Card>
+        
+        <Card>
+          <IconWrapper themecolor="#E1306C" hashandle={handles.instagram}>
+            <FaInstagram />
+          </IconWrapper>
+          <Domain>https://instagram.com/</Domain>
+          <Input
+            type="text"
+            placeholder="username"
+            value={handles.instagram}
+            onChange={(e) => handleChange(e, "instagram")}
+          />
+          {loading.instagram ? (
+            <div>
+              <Loading /> {/* Render the loader component */}
+            </div>
+          ) : (
+            <SaveButton className="btn btn-outline-dark" onClick={() => saveHandle("instagram")}>
+              Save
+            </SaveButton>
+          )}
+          {errors.instagram && <ErrorText>{errors.instagram}</ErrorText>} {/* Display error message */}
+        </Card>
+        
+        <Card>
+          <IconWrapper themecolor="#1DA1F2" hashandle={handles.x}>
+            <FaTwitter />
+          </IconWrapper>
+          <Domain>https://twitter.com/</Domain>
+          <Input
+            type="text"
+            placeholder="username"
+            value={handles.x}
+            onChange={(e) => handleChange(e, "x")}
+          />
+          {loading.x ? (
+            <div>
+              <Loading /> {/* Render the loader component */}
+            </div>
+          ) : (
+            <SaveButton className="btn btn-outline-dark" onClick={() => saveHandle("x")}>
+              Save
+            </SaveButton>
+          )}
+          {errors.x && <ErrorText>{errors.x}</ErrorText>} {/* Display error message */}
+        </Card>
+        
+        <Card>
+          <IconWrapper themecolor="#0088cc" hashandle={handles.telegram}>
+            <FaTelegramPlane />
+          </IconWrapper>
+          <Domain>https://t.me/</Domain>
+          <Input
+            type="text"
+            placeholder="username"
+            value={handles.telegram}
+            onChange={(e) => handleChange(e, "telegram")}
+          />
+          {loading.telegram ? (
+            <div>
+              <Loading /> {/* Render the loader component */}
+            </div>
+          ) : (
+            <SaveButton className="btn btn-outline-dark" onClick={() => saveHandle("telegram")}>
+              Save
+            </SaveButton>
+          )}
+          {errors.telegram && <ErrorText>{errors.telegram}</ErrorText>} {/* Display error message */}
+        </Card>
+        
+        <Card>
+          <IconWrapper themecolor="#FFFC00" hashandle={handles.snapchat}>
+            <FaSnapchatGhost />
+          </IconWrapper>
+          <Domain>https://snapchat.com/add/</Domain>
+          <Input
+            type="text"
+            placeholder="username"
+            value={handles.snapchat}
+            onChange={(e) => handleChange(e, "snapchat")}
+          />
+          {loading.snapchat ? (
+            <div>
+              <Loading /> {/* Render the loader component */}
+            </div>
+          ) : (
+            <SaveButton className="btn btn-outline-dark" onClick={() => saveHandle("snapchat")}>
+              Save
+            </SaveButton>
+          )}
+          {errors.snapchat && <ErrorText>{errors.snapchat}</ErrorText>} {/* Display error message */}
+        </Card>
       </RightColumn>
     </Container>
   );
