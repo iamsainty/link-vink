@@ -1,64 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import Navbar from '../Navbar';
-import UserNotExist from './UserNotExist'; // Import the component for non-existent users
-import UserLinks from './UserLinks';
-import UserIntro from './UserIntro';
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import AuthContext from "../../Context/AuthContext/authContext";
+import UserNotExist from "./UserNotExist";
+import Loading from "../../UIcomponent/Loading";
+import UserIntro from "./UserIntro";
+import UserLinks from "./UserLinks";
+import GetYours from "./GetYours";
 
-const UserProfile = () => {
-    const { username } = useParams();
-    const navigate = useNavigate();
-    const [error, setError] = useState(null);
-    const [userExists, setUserExists] = useState(false); // State to check if user exists
+function UserProfile() {
+  const { username } = useParams();
+  const { getUser, showuser } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    const host = 'https://link-vink-server.vercel.app';
+  localStorage.setItem( "username", username);
 
-    
-    useEffect(() => {
-        if (username === 'admin') {
-            navigate('/admin'); // redirect to admin page if username is admin
-            return;
-        }
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        await getUser(username);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    };
 
+    fetchUser();
+    // eslint-disable-next-line
+  }, [username ]);
 
-        const fetchUserProfile = async () => {
-            try {
-                const userDetailsResponse = await fetch(`${host}/auth/user/${username}`);
-
-                const userData = await userDetailsResponse.json();
-                if (userData.exists) {
-                    setUserExists(true);
-                }
-                else {
-                    return <UserNotExist />
-                } // If user does not exist, display the UserNotExist component
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setError(error.message);
-            }
-        };
-        fetchUserProfile();
-    }, [username, navigate]);
-
-    if (username === 'admin') {
-        return null; // Prevent rendering of UserProfile component if username is admin
+  useEffect(() => {
+    if (showuser) {
+      setUser(showuser);
     }
+  }, [showuser]);
 
-    if (!userExists) {
-        return <UserNotExist />; // Render the UserNotExist component if user does not exist
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
+  if (loading) {
     return (
-        <>
-            <Navbar />
-            <UserIntro username={username}/>
-            <UserLinks username={username}/>
-        </>
+      <div style={{ height: "100vh", width: "100vw" }}>
+        <Loading />
+      </div>
     );
-};
+  }
+
+  if (user && !user.exists) {
+    return <UserNotExist />;
+  }
+
+  return (
+    <>
+      <div style={{width: '100vw', minHeight: '100vh', backgroundImage: 'linear-gradient(to right, #753a88, #cc2b5e)'}}>
+        <GetYours />
+        <UserIntro />
+        <UserLinks />
+      </div>
+    </>
+  );
+}
 
 export default UserProfile;

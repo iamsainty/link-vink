@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../Navbar';
+import ErrorNavbar from '../ErrorNavbar';
 
 function UserNotExist() {
   return (
     <>
-      <Navbar />
+      <ErrorNavbar />
       <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 

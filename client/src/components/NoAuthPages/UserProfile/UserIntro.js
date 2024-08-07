@@ -1,89 +1,178 @@
-import React, { useEffect, useState } from 'react';
-import Loading from '../../UIcomponent/Loading';
+import React, { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import AuthContext from "../../Context/AuthContext/authContext";
+import Loading from "../../UIcomponent/Loading";
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaTwitter,
+  FaTelegramPlane,
+  FaSnapchatGhost,
+} from "react-icons/fa";
 
-const UserIntro = (props) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+const UserName = styled.h1`
+  padding-top: 15vh;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10vh;
+`;
 
-    const host = 'https://link-vink-server.vercel.app';
+const SocialIcons = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+`;
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const username = props.username;
-                // Fetch user details
-                const userDetailsResponse = await fetch(`${host}/auth/user/${username}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+const Card = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 15px;
+  border: 0.5px solid black;
+  padding: 10px 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
+  cursor: pointer;
 
-                if (!userDetailsResponse.ok) {
-                    throw new Error('Failed to fetch user details');
-                }
+  &:hover {
+    background-color: ${(props) => props.themecolor};
+  }
+`;
 
-                const userData = await userDetailsResponse.json();
-                setUser(userData.data);
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1em;
 
-                // Wait for at least 1 second
-                await new Promise(resolve => setTimeout(resolve, 800));
-                setLoading(false);
+  @media (max-width: 600px) {
+    font-size: 1em;
+  }
+`;
 
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setLoading(false); // Handle the error case and stop loading
-            }
-        };
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 25px;
+  font-size: 1.2em;
+`;
 
-        fetchUserData();
-        // eslint-disable-next-line
-    }, []);
+const IconText = styled.div`
+  display: flex;
+  align-items: center;
+  height: 25px;
+  @media (max-width: 600px) {
+    display: none;
+  }
+`;
 
-    if (loading) {
-        return (
-            <div style={{ height: '30vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Loading />
-            </div>
-        );
+function UserIntro() {
+  const [user, setUser] = useState(null);
+  const username = localStorage.getItem("username");
+
+  const { getUser, showuser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (username) {
+        await getUser(username);
+      }
+    };
+
+    fetchUser();
+    // eslint-disable-next-line
+  }, [username]);
+
+  useEffect(() => {
+    if (showuser) {
+      setUser(showuser.data);
     }
+  }, [showuser]);
 
-    return (
-        <>
-            {/* Large Screen Layout */}
-            <div className="d-none d-lg-block container" style={{ marginTop: '10vh' }}>
-                <h1 style={{ fontWeight: 'bold', fontSize: '5vh' }}>
-                    Hey, I am
-                </h1>
-                <h1 style={{
-                    fontSize: '7vh',
-                    fontWeight: '900',
-                    backgroundImage: 'linear-gradient(to right, #753a88, #cc2b5e)',
-                    WebkitBackgroundClip: 'text',
-                    color: 'transparent',
-                    marginBottom: '5vh'
-                }}>{user.name}</h1>
-                <p className="lead" style={{ fontSize: '3.5vh', fontWeight: '500' }}>Let's connect to grow together!</p>
-            </div>
+  const socialHandles = [
+    {
+      handle: "whatsapp",
+      platform: "Whatsapp",
+      icon: <FaWhatsapp className="icon" />,
+      url: "https://wa.me/",
+    },
+    {
+      handle: "instagram",
+      platform: "Instagram",
+      icon: <FaInstagram className="icon" />,
+      url: "https://instagram.com/",
+    },
+    {
+      handle: "x",
+      platform: "Twitter / X",
+      icon: <FaTwitter className="icon" />,
+      url: "https://x.com/",
+    },
+    {
+      handle: "telegram",
+      platform: "Telegram",
+      icon: <FaTelegramPlane className="icon" />,
+      url: "https://t.me/",
+    },
+    {
+      handle: "snapchat",
+      platform: "Snapchat",
+      icon: <FaSnapchatGhost className="icon" />,
+      url: "https://snapchat.com/add/",
+    },
+  ];
 
-            {/* Small Screen Layout */}
-            <div className="d-lg-none container" style={{ marginTop: '5vh' }}>
-                <h1 style={{ fontWeight: 'bold', fontSize: '4vh', textAlign: 'center' }}>
-                    Hey, I am
-                </h1>
-                <h1 style={{
-                    fontSize: '7vw',
-                    fontWeight: '900',
-                    backgroundImage: 'linear-gradient(to right, #753a88, #cc2b5e)',
-                    WebkitBackgroundClip: 'text',
-                    color: 'transparent',
-                    marginBottom: '3vh',
-                    textAlign: 'center'
-                }}>{user.name}</h1>
-                <p className="lead" style={{ fontSize: '2.5vh', fontWeight: '600', textAlign: 'center' }}>Let's connect to grow together!</p>
-            </div>
-        </>
-    );
-};
+  const handleRedirect = (url, username) => {
+    window.open(url + username, "_blank");
+  };
+
+  return (
+    <div>
+      {user ? (
+        <div>
+          <UserName>{user.name}</UserName>
+          <SocialIcons className="container">
+            {socialHandles.map((handle, index) => {
+              const userHandle =
+                user.socialHandles?.[handle.handle.toLowerCase()];
+              return (
+                userHandle && (
+                  <Card
+                    key={index}
+                    onClick={() => handleRedirect(handle.url, userHandle)}
+                    themecolor={
+                      handle.platform === "Whatsapp"
+                        ? "rgba(37, 211, 102, 0.75)"
+                        : handle.platform === "Instagram"
+                        ? "rgba(225, 48, 108, 0.75)"
+                        : handle.handle === "x"
+                        ? "rgba(29, 161, 242, 0.75)"
+                        : handle.platform === "Telegram"
+                        ? "rgba(0, 136, 204, 0.75)"
+                        : handle.platform === "Snapchat"
+                        ? "rgba(255, 252, 0, 0.75)"
+                        : "#ddd"
+                    }
+                  >
+                    <IconWrapper>
+                      <IconContainer>{handle.icon}</IconContainer>
+                      <IconText>{handle.platform}</IconText>
+                    </IconWrapper>
+                  </Card>
+                )
+              );
+            })}
+          </SocialIcons>
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </div>
+  );
+}
 
 export default UserIntro;

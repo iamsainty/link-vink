@@ -1,184 +1,160 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { FiCopy, FiExternalLink } from 'react-icons/fi';
-import { MdDone } from 'react-icons/md';
-import { FaSadTear } from 'react-icons/fa';
+import React, { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import AuthContext from "../../Context/AuthContext/authContext";
+import linkContext from "../../Context/LinkContext/linkContext";
+import { FiCopy, FiCheck } from "react-icons/fi";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-top: 75px;
+`;
 
 const Card = styled.div`
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    margin-bottom: 20px;
-    padding: 20px;
-    transition: transform 0.3s ease-in-out;
-    text-align: left;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 0.5px solid black;
+  margin: 20px 0;
+  padding: 20px;
+  display: flex;
+  width: 60vw;
+  align-items: center;
+  justify-content: space-evenly;
+  transition: transform 0.3s, box-shadow 0.3s;
+  @media (max-width: 768px) {
+    width: 90vw;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .card-title,
-    .card-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 10px;
-    }
-
-    .d-flex {
-        margin-top: 10px;
-        align-items: center;
-    }
-
-    .icon {
-        cursor: pointer;
-        font-size: 1.2em;
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
-    }
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
 `;
 
-const NoLinksMessage = styled.div`
-    text-align: center;
-    margin: 20px;
-    padding: 20px;
-    font-size: 18px;
-    border-radius: 10px;
-    color: grey;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-
-    .icon {
-        font-size: 2em;
-        margin: 20px;
-    }
+const CardTitle = styled.p`
+  width: 40%;
+  font-size: 1.25rem;
+  color: #333;
+  margin: 0;
+  padding-right: 10px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
-function UserLinks(props) {
-    const [showSocial, setShowSocial] = useState(false);
-    const [copySuccess, setCopySuccess] = useState(false);
-    const [links, setLinks] = useState([]);
-    const username = props.username;
+const CardLink = styled.div`
+  width: 40%;
+  text-decoration: none;
+  color: #007bff;
+  background-color: rgba(0, 0, 0, 0.075);
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  @media (max-width: 768px) {
+    width: 90%;
+    background-color: white;
+    padding-left: 0;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
-    const host = 'https://link-vink-server.vercel.app';
+const CopyIcon = styled.div`
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin-left: 10px;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
 
-    useEffect(() => {
-        const fetchLinks = async () => {
-            const response = await fetch(`${host}/link/links/${username}`);
-            const data = await response.json();
-            setLinks(data.links);
-        };
-        fetchLinks();
-    }, [username]);
+const NoLinksMessage = styled.p`
+  font-size: 1.25rem;
+  color: white;
+  margin-top: 20px;
+`;
 
-    const changeToProfile = () => {
-        setShowSocial(false);
+function UserLinks() {
+  const { getUser, showuser } = useContext(AuthContext);
+  const { links, fetchLinks, updatelinkclick } = useContext(linkContext);
+  const [userid, setUserid] = useState(null);
+  const [copiedLinkId, setCopiedLinkId] = useState(null);
+
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        await getUser(username);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
     };
 
-    const changeToSocial = () => {
-        setShowSocial(true);
-    };
+    fetchUser();
+    // eslint-disable-next-line
+  }, [username]);
 
-    const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text)
-            .then(() => {
-                setCopySuccess(true);
-                setTimeout(() => {
-                    setCopySuccess(false);
-                }, 1000);
-            })
-            .catch(err => {
-                console.error('Failed to copy:', err);
-            });
-    };
+  useEffect(() => {
+    if (showuser) {
+      setUserid(showuser.data._id);
+    }
+  }, [showuser]);
 
-    const openLink = (url) => {
-        window.open(url, '_blank');
-    };
+  useEffect(() => {
+    if (userid) {
+      fetchLinks(userid);
+    }
+    // eslint-disable-next-line
+  }, [userid]);
 
-    const renderLinks = (filteredLinks) => {
-        if (filteredLinks.length === 0) {
-            return (
-                <NoLinksMessage>
-                    <FaSadTear className="icon" />
-                    No links to display <br /> Try again later
-                </NoLinksMessage>
-            );
-        }
+  const handleLinkClick = async (url, id) => {
+    try {
+      await updatelinkclick(id);
+      window.location.href = url;
+    } catch (error) {
+      console.error("Error updating click count or redirecting:", error);
+    }
+  };
 
-        return filteredLinks.reverse().map((link) => (
-            <Card key={link._id}>
-                <div className="card">
-                    <div className="card-body">
-                        <h5 className="card-title">{link.title}</h5>
-                        <p className="card-text">{link.url}</p>
-                        <div className="d-flex" style={{ marginTop: '2vh' }}>
-                            <span className="icon" onClick={() => copyToClipboard(link.url)}>
-                                {copySuccess ? <MdDone /> : <FiCopy />}
-                            </span>
-                            <FiExternalLink className="icon" onClick={() => openLink(link.url)} />
-                        </div>
-                    </div>
-                </div>
-            </Card>
-        ));
-    };
+  const handleCopy = (url, id) => {
+    navigator.clipboard.writeText(url);
+    setCopiedLinkId(id);
+    setTimeout(() => setCopiedLinkId(null), 1000);
+  };
 
-    return (
-        <div className='container' style={{ marginTop: '10vh' }}>
-            <div className="d-none d-lg-flex flex-row row">
-                <div className="col-md-6">
-                    <h2 style={{ fontWeight: '600', marginBottom: '5vh' }}>My Profiles</h2>
-                    {renderLinks(links.filter((link) => !link.social))}
-                </div>
-                <div className="col-md-6">
-                    <h2 style={{ fontWeight: '600', marginBottom: '5vh' }}>Social Handles</h2>
-                    {renderLinks(links.filter((link) => link.social))}
-                </div>
-            </div>
-
-            <div className="d-lg-none">
-                <div className="d-flex flex-row justify-content-center text-center" style={{ borderRadius: '10px', border: '1px solid #ddd', marginBottom: '20px', padding: '10px' }}>
-                    <div
-                        onClick={changeToProfile}
-                        style={{
-                            background: showSocial ? '#f5f5f5' : 'linear-gradient(to right, #753a88, #cc2b5e)',
-                            color: showSocial ? '#333' : '#fff',
-                            padding: '10px',
-                            cursor: 'pointer',
-                            width: '50%',
-                            borderRadius: '10px 0 0 10px',
-                            textAlign: 'center',
-                            borderRight: showSocial ? '1px solid #ddd' : 'none',
-                        }}
-                    >
-                        Your Profiles
-                    </div>
-                    <div
-                        onClick={changeToSocial}
-                        style={{
-                            background: showSocial ? 'linear-gradient(to right, #753a88, #cc2b5e)' : '#f5f5f5',
-                            color: showSocial ? '#fff' : '#333',
-                            padding: '10px',
-                            cursor: 'pointer',
-                            width: '50%',
-                            borderRadius: '0 10px 10px 0',
-                            textAlign: 'center',
-                            borderLeft: showSocial ? 'none' : '1px solid #ddd',
-                        }}
-                    >
-                        Social handles
-                    </div>
-                </div>
-                <div>
-                    {showSocial === false
-                        ? renderLinks(links.filter((link) => !link.social))
-                        : renderLinks(links.filter((link) => link.social))
-                    }
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <Container>
+      {links && links.length > 0 ? (
+        links.map((link) => (
+          <Card key={link._id}>
+            <CardTitle>{link.title}</CardTitle>
+            <CardLink onClick={() => handleLinkClick(link.url, link._id)}>
+              {link.url}
+            </CardLink>
+            <CopyIcon onClick={() => handleCopy(link.url, link._id)}>
+              {copiedLinkId === link._id ? <FiCheck /> : <FiCopy />}
+            </CopyIcon>
+          </Card>
+        ))
+      ) : (
+        <NoLinksMessage>No links available</NoLinksMessage>
+      )}
+    </Container>
+  );
 }
 
 export default UserLinks;
