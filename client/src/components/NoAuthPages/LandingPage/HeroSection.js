@@ -56,8 +56,8 @@ function HeroSection() {
       </div>
 
       {/* Small Screen */}
-      <div className="d-md-none" style={{ padding: '4vh' }}>
-        <h1 style={{ fontWeight: 'bold', fontSize: '4vh', marginBottom: '3vh' }}>
+      <div className="d-md-none" style={{ padding: '1.5vh' }}>
+        <h1 style={{ fontWeight: 'bold', fontSize: '3.5vh', marginBottom: '3vh' }}>
           Managing multiple links made easy
         </h1>
         <h1 style={{

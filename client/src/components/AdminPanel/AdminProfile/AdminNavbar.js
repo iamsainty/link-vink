@@ -76,7 +76,7 @@ const Brand = styled(Link)`
 
 function AdminNavbar() {
   const handleLogout = (navigate) => {
-    localStorage.removeItem("authtoken");
+    localStorage.removeItem("link-vink-authtoken");
     navigate("/");
     window.location.reload();
   };
