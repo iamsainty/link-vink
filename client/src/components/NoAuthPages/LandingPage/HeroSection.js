@@ -35,7 +35,7 @@ function HeroSection() {
             alignItems: 'center'
           }}>
             <span style={{ textDecoration: 'none' }}>
-              &nbsp; https://link-vink.in/yourname &nbsp;
+              &nbsp; https://link-vink.vercel.app/u/yourname &nbsp;
             </span>
           </div>
         </div>
