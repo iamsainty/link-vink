@@ -8,18 +8,20 @@ const AddLink = () => {
 
   const { addLink } = useContext(LinkContext);
 
-  const handleAddLink = () => {
+  const handleAddLink = async () => {
     if (link.title.trim() === "") {
       setMsg("Title cannot be empty");
     } else if (link.url.trim() === "") {
       setMsg("URL cannot be empty");
     } else {
-      addLink(link);
+      await addLink(link);
       setLink({ title: "", url: "" });
       setMsg("");
       window.location.reload();
     }
   };
+
+  console.log(link)
 
   const handleChange = (e) => {
     const { name, value } = e.target;

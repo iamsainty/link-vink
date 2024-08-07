@@ -76,7 +76,7 @@ router.post("/newlink", userdetails, async (req, res) => {
       url,
     });
     const savedLink = await link.save();
-    res.json({ savedLink });
+    res.status(201).json({ message: "Link created successfully", link: savedLink });
   } catch (error) {
     console.log(error);
     res.status(500).json("Some error occurred");

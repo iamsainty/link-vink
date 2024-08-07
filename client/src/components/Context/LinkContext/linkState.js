@@ -40,7 +40,7 @@ const LinkState = (props) => {
         body: JSON.stringify(link),
       });
       const newLink = await response.json();
-      setLinks([...links, newLink.savedLink]);
+      setLinks([...links, newLink.link]);
     } catch (error) {
       console.error("Error adding link:", error);
     }
