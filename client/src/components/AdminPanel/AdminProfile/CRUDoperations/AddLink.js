@@ -20,7 +20,7 @@ const AddLink = () => {
       setLoading(false);
       setLink({ title: "", url: "" });
       setMsg("");
-      // window.location.reload();
+      window.location.reload();
     }
   };
 
