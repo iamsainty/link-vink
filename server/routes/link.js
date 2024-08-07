@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Link = require("../models/Link");
 const userdetails = require("../middleware/userdetails");
+const mongoose = require('mongoose');
 
 // Fetching all links along with link count and total click count
 router.get("/links", async (req, res) => {
@@ -17,12 +18,21 @@ router.get("/links", async (req, res) => {
 });
 
 // Fetching all links of a single user
+// Route to get links by user ID
 router.get("/userlinks/:id", async (req, res) => {
   try {
     const userId = req.params.id; // Get user ID from route parameters
-    const links = await Link.find({ user: userId }); // Use user ID to find links
+
+    // Check if userId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    // Use user ID to find links
+    const links = await Link.find({ user: userId });
     const linkcount = links.length;
     const clickcount = links.reduce((acc, link) => acc + link.clickCount, 0); // Calculate total click count
+
     res.status(200).json({ links, linkcount, clickcount });
   } catch (error) {
     console.error("Error fetching links:", error);
@@ -43,7 +53,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Endpoint to handle link clicks and update click count
-router.post("/click/:id", async (req, res) => {
+router.put("/click/:id", async (req, res) => {
   try {
     const link = await Link.findById(req.params.id);
     if (!link) return res.status(404).send("No such link exists.");

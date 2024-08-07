@@ -19,6 +19,10 @@ const userSchema = mongoose.Schema(
             type: Number,
             default: 0,
         },
+        lastView: {
+            type: Date,
+            default: null,
+        },
         socialHandles: {
             whatsapp: {
                 type: String,
