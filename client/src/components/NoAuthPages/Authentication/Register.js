@@ -1,24 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import styled from 'styled-components';
+import { Card, Form, Button } from 'react-bootstrap';
+import Loading from '../../UIcomponent/Loading'; // Import the Loading component
+import AuthContext from '../../Context/AuthContext/authContext';
 
-function Register() {
-  const [credentials, setCredentials] = useState({ name: "", username: "", password: "" });
+const Background = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to right, #753a88, #cc2b5e);
+`;
+
+const StyledCard = styled(Card)`
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+
+  @media (max-width: 576px) {
+    width: 90%;
+    padding: 1.5rem;
+  }
+`;
+
+const PasswordToggle = styled.span`
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #753a88;
+  font-size: 1.2rem;
+`;
+
+const ErrorMsg = styled.div`
+  font-size: 0.875rem;
+  color: #d32f2f;
+  padding-bottom: 1rem;
+`;
+
+const Register = () => {
+  const authContext = useContext(AuthContext);
+  const { register, checkUsernameAvailability, error } = authContext;
+  const [credentials, setCredentials] = useState({ name: '', username: '', password: '' });
   const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(false); // Add loading state
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  const host = 'https://link-vink-server.vercel.app';
-
-  const validateUsername = (username) => {
-    const usernameRegex = /^[a-z0-9]{4,20}$/;
-    return usernameRegex.test(username);
-  };
-
-  const validatePassword = (password) => {
-    const passwordRegex = /^\S{6,15}$/;
-    return passwordRegex.test(password);
-  };
+  const validateUsername = (username) => /^[a-z0-9]{4,20}$/.test(username);
+  const validatePassword = (password) => /^\S{6,15}$/.test(password);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,93 +68,103 @@ function Register() {
       setMsg('Password should have 6 to 15 characters and no spaces.');
       return;
     }
-
+setLoading(true)
     try {
-      const response = await fetch(`${host}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: credentials.name, username: credentials.username, password: credentials.password }),
-      });
-
-      const json = await response.json();
-      if (response.ok) {
-        localStorage.setItem('authtoken', json.token);
-        navigate('/admin');
-        window.location.reload(); // Reload the page to update the navbar
-      } else {
-        setMsg(json.message);
-      }
-    } catch (error) {
-      setMsg('Registration error.');
+      await register(credentials.name, credentials.username, credentials.password);
+    } catch (err) {
+      setMsg(error || 'Registration error.');
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (localStorage.getItem('authtoken')) {
-        navigate('/admin');
-      }
-    };
-    fetchUser();
+    if (localStorage.getItem('authtoken')) navigate('/admin');
   }, [navigate]);
 
-  const checkUsernameAvailability = async (username) => {
-    if (username.toLowerCase() === 'admin') {
-      setMsg('The username "admin" cannot be used.');
-      return;
-    }
-    if (!validateUsername(username)) {
-      setMsg('Username: 4-20 chars, lowercase, numbers.');
-      return;
-    }
-    try {
-      const response = await fetch(`${host}/auth/user/${username}`);
-      const json = await response.json();
-      if (response.ok && json.exists) {
-        setMsg('Username taken.');
-      } else {
-        setMsg('');
-      }
-    } catch (error) {
-      setMsg('Error checking username.');
-    }
-  };
-
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
     if (e.target.name === 'username') {
-      checkUsernameAvailability(e.target.value);
+      const isAvailable = await checkUsernameAvailability(e.target.value);
+      setMsg(isAvailable ? '' : 'Username taken.');
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh', background: 'linear-gradient(to right, #753a88, #cc2b5e)' }}>
-      <div className="card p-4 shadow-lg" style={{ width: '60vh', maxWidth: '90%', borderRadius: '3vh' }}>
-        <h2 className="text-center mb-4" style={{ fontSize: '4vh', color: '#753a88' }}><b>Register your account</b></h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <input type="text" className="form-control" id="name" onChange={handleChange} value={credentials.name} name='name' placeholder='Name' style={{ borderColor: '#753a88', borderWidth: '0.25vh' }} />
-          </div>
-          <div className="mb-3">
-            <input type="text" className="form-control" id="username" onChange={handleChange} value={credentials.username} name='username' placeholder='Username' style={{ borderColor: '#753a88', borderWidth: '0.25vh' }} aria-describedby="usernameHelp" />
-          </div>
-          <div className="mb-3">
+    <Background>
+      <StyledCard className="shadow-lg">
+        <h2 className="text-center mb-4" style={{ color: '#753a88', fontSize: '2rem' }}>
+          Register Your Account
+        </h2>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              name="name"
+              placeholder='Name'
+              value={credentials.name}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              name="username"
+              placeholder='Username'
+              value={credentials.username}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
             <div className="input-group">
-              <input type={passwordVisible ? 'text' : 'password'} className="form-control" id="password" onChange={handleChange} value={credentials.password} placeholder='Password' style={{ borderColor: '#753a88', borderWidth: '0.25vh', borderRight: '1vh' }} name='password' />
-              <span className="input-group-text" onClick={() => setPasswordVisible(!passwordVisible)} style={{ cursor: 'pointer', borderColor: '#753a88', borderWidth: '0.25vh' }}>
+            <Form.Control
+                type={passwordVisible ? "text" : "password"}
+                id="password"
+                onChange={handleChange}
+                value={credentials.password}
+                placeholder="Password"
+                name="password"
+              />
+              <PasswordToggle
+                className="input-group-text"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+              >
                 {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              </PasswordToggle>
             </div>
-          </div>
-          <div style={{ fontSize: '1.75vh', color: 'red', paddingBottom: '1.5vh' }}>{msg}</div>
-          <button type="submit" className="btn btn-block" style={{ width: '100%', background: 'linear-gradient(to right, #753a88, #cc2b5e)', color: '#fff', border: 'none', padding: '1vh', fontSize: '2.5vh', borderRadius: '5px' }}>Register</button>
-          <p style={{ fontSize: '2vh', marginTop: '1.75vh', textAlign: 'center' }}>Already have an account? <Link to="/login" style={{ color: '#753a88' }}>Login now</Link></p>
-        </form>
-      </div>
-    </div>
+          </Form.Group>
+          {msg && <ErrorMsg>{msg}</ErrorMsg>}
+          {loading ? ( // Display Loading component if loading is true
+            <Loading />
+          ) : (
+            <Button
+              type="submit"
+              className="w-100"
+              style={{
+                background: "#753a88",
+                color: "#fff",
+                border: "none",
+                padding: "0.75rem",
+                fontSize: "1rem",
+              }}
+            >
+              Redister
+            </Button>
+          )}
+             <p className="text-center mt-3" style={{ fontSize: "0.875rem" }}>
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              style={{ color: "#753a88", textDecoration: "underline" }}
+            >
+              Login now
+            </Link>
+          </p>
+        </Form>
+      </StyledCard>
+    </Background>
   );
-}
+};
 
 export default Register;

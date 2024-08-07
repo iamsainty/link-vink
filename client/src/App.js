@@ -9,7 +9,8 @@ import AdminPage from './components/AdminPanel/AdminProfile/AdminProfile';
 import UserProfile from './components/NoAuthPages/UserProfile/UserProfile';
 import LinkState from './components/Context/LinkContext/linkState';
 import AuthState from './components/Context/AuthContext/authState';
-import Loading from './components/UIcomponent/Loading';
+import ErrorPage from './components/NoAuthPages/ErrorPage';
+
 
 function App() {
   return (
@@ -19,11 +20,11 @@ function App() {
           <LinkState>
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path='/loading' element={<Loading />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/admin" element={<AdminPage />} />
-              <Route path="/:username" element={<UserProfile />} />
+              <Route path="/u/:username" element={<UserProfile />} />
+              <Route exact path="*" element={<ErrorPage />} />
             </Routes>
           </LinkState>
         </AuthState>

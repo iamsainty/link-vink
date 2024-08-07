@@ -1,88 +1,173 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import styled from "styled-components";
+import { Card, Form, Button } from "react-bootstrap";
+import Loading from "../../UIcomponent/Loading"; // Import the Loading component
+import AuthContext from "../../Context/AuthContext/authContext";
 
-function Login() {
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
-  const [msg, setMsg] = useState('');
+const Background = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to right, #753a88, #cc2b5e);
+`;
+
+const StyledCard = styled(Card)`
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+
+  @media (max-width: 576px) {
+    width: 90%;
+    padding: 1.5rem;
+  }
+`;
+
+const PasswordToggle = styled.span`
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #753a88;
+  font-size: 1.2rem;
+`;
+
+const ErrorMsg = styled.div`
+  font-size: 0.875rem;
+  color: #d32f2f;
+  padding-bottom: 1rem;
+`;
+
+const Login = () => {
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  });
+  const [msg, setMsg] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
-
-  const host = 'https://link-vink-server.vercel.app';
+  const authContext = useContext(AuthContext);
+  const { login, error } = authContext;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (credentials.username === '') {
-      setMsg('Enter your username');
+    if (!credentials.username) {
+      setMsg("Enter your username");
       return;
     }
-    if (credentials.password === '') {
-      setMsg('Enter your password');
+    if (!credentials.password) {
+      setMsg("Enter your password");
       return;
     }
+
+    setLoading(true); // Set loading to true
 
     try {
-      const response = await fetch(`${host}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username: credentials.username, password: credentials.password }),
-      });
-
-      const json = await response.json();
-      if (response.ok) {
-        localStorage.setItem('authtoken', json.token); // Use token instead of authtoken
-        navigate('/admin');
-        window.location.reload(); // Reload the page to update the navbar
-      } else {
-        setMsg(json.message);
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      setMsg('An error occurred. Please try again later.');
+      await login(credentials.username, credentials.password);
+    } catch (err) {
+      setMsg(error || 'Login error.');
     }
+    setLoading(false); // Set loading to false
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (localStorage.getItem('authtoken')) {
-        navigate('/admin');
-      }
-    };
-    fetchUser();
+    if (localStorage.getItem("authtoken")) navigate("/admin");
   }, [navigate]);
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
-    if (e.target.name === 'username') {
-      setMsg('');
-    }
+    if (e.target.name === "username") setMsg("");
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh', background: 'linear-gradient(to right, #753a88, #cc2b5e)' }}>
-      <div className="card p-4 shadow-lg" style={{ width: '60vh', maxWidth: '90%', borderRadius: '3vh' }}>
-        <h2 className="text-center mb-4" style={{ fontSize: '4vh', color: '#753a88' }}><b>Login to your account</b></h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <input type="text" className="form-control" id="username" onChange={handleChange} value={credentials.username} name='username' placeholder='Username' style={{ borderColor: '#753a88', borderWidth: '0.25vh' }} aria-describedby="usernameHelp" />
-          </div>
-          <div className="mb-3">
+    <Background>
+      <StyledCard className="shadow-lg">
+        <h2
+          className="text-center mb-4"
+          style={{ color: "#753a88", fontSize: "1.5rem", fontWeight: "bold" }}
+        >
+          Login to Your Account
+        </h2>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group
+            className="mb-3"
+            style={{
+              borderColor: "#753a88",
+              borderWidth: "2px",
+              fontSize: "1rem",
+            }}
+          >
+            <Form.Control
+              type="text"
+              id="username"
+              onChange={handleChange}
+              value={credentials.username}
+              name="username"
+              placeholder="Username"
+              aria-describedby="usernameHelp"
+            />
+          </Form.Group>
+          <Form.Group
+            className="mb-3"
+            style={{
+              borderColor: "#753a88",
+              borderWidth: "2px",
+              fontSize: "1rem",
+            }}
+          >
             <div className="input-group">
-              <input type={passwordVisible ? 'text' : 'password'} className="form-control" id="password" onChange={handleChange} value={credentials.password} placeholder='Password' style={{ borderColor: '#753a88', borderWidth: '0.25vh', borderRight: '1vh' }} name='password' />
-              <span className="input-group-text" onClick={() => setPasswordVisible(!passwordVisible)} style={{ cursor: 'pointer', borderColor: '#753a88', borderWidth: '0.25vh' }}>
+              <Form.Control
+                type={passwordVisible ? "text" : "password"}
+                id="password"
+                onChange={handleChange}
+                value={credentials.password}
+                placeholder="Password"
+                name="password"
+              />
+              <PasswordToggle
+                className="input-group-text"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+              >
                 {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              </PasswordToggle>
             </div>
-          </div>
-          <div style={{ fontSize: '1.75vh', color: 'red', paddingBottom: '1.5vh' }}>{msg}</div>
-          <button type="submit" className="btn btn-block" style={{ width: '100%', background: 'linear-gradient(to right, #753a88, #cc2b5e)', color: '#fff', border: 'none', padding: '1vh', fontSize: '2.5vh', borderRadius: '5px' }}>Login</button>
-          <p style={{ fontSize: '2vh', marginTop: '1.75vh', textAlign: 'center' }}>Don't have an account? <Link to="/register" style={{ color: '#753a88' }}>Register now</Link></p>
-        </form>
-      </div>
-    </div>
+          </Form.Group>
+          <ErrorMsg>{msg}</ErrorMsg>
+          {loading ? ( // Display Loading component if loading is true
+            <Loading />
+          ) : (
+            <Button
+              type="submit"
+              className="w-100"
+              style={{
+                background: "#753a88",
+                color: "#fff",
+                border: "none",
+                padding: "0.75rem",
+                fontSize: "1rem",
+              }}
+            >
+              Login
+            </Button>
+          )}
+          <p className="text-center mt-3" style={{ fontSize: "0.875rem" }}>
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              style={{ color: "#753a88", textDecoration: "underline" }}
+            >
+              Register now
+            </Link>
+          </p>
+        </Form>
+      </StyledCard>
+    </Background>
   );
-}
+};
 
 export default Login;

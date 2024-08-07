@@ -12,7 +12,7 @@ function Loading() {
       <div style={{
           width: '50px',
           height: '50px',
-          border: '6px solid rgba(117, 58, 136, 0.3)',
+          border: '5px solid rgba(117, 58, 136, 0.3)',
           borderTop: '6px solid #753a88',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite'

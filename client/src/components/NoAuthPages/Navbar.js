@@ -1,107 +1,102 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-// import HomeIcon from '@mui/icons-material/Home';
-// import InfoIcon from '@mui/icons-material/Info';
-// import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-// import FeedbackIcon from '@mui/icons-material/Feedback';
-// import ContactsIcon from '@mui/icons-material/Contacts';
-// import PersonAddIcon from '@mui/icons-material/PersonAdd';
-// import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import React from "react";
+import styled from "styled-components";
+import { Link as ScrollLink } from "react-scroll";
+import { Link } from "react-router-dom";
+
+const NavbarContainer = styled.nav`
+  background: linear-gradient(to right, #753a88, #cc2b5e);
+`;
+
+const NavLink = styled(Link)`
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 3vh;
+  &:hover {
+    color: #ffffff; /* Maintain the text color on hover */
+    text-decoration: none; /* Maintain no underline on hover */
+    cursor: pointer; /* Change the cursor to pointer */
+  }
+`;
+
+const ScrollNavLink = styled(ScrollLink)`
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 3vh;
+  &:hover {
+    color: #ffffff; /* Maintain the text color on hover */
+    text-decoration: none; /* Maintain no underline on hover */
+    cursor: pointer; /* Change the cursor to pointer */
+  }
+`;
+
+const MobileView = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: row;
+  @media (min-width: 992px) {
+    display: none;
+  }
+`;
+
+const DesktopView = styled.div`
+  display: none;
+  width: 100%;
+  @media (min-width: 992px) {
+    display: flex;
+    flex-direction: row;
+  }
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  justify-content: ${({ justifycontent }) => justifycontent || "start"};
+  align-items: center;
+  margin: ${({ margin }) => margin || "0"};
+`;
 
 function Navbar() {
-    return (
-        <nav className="navbar navbar-expand-lg" style={{ background: 'linear-gradient(to right, #753a88, #cc2b5e)' }}>
-            {/* Mobile view */}
-            <div className="navbar-nav d-lg-none w-100 d-flex justify-content-between flex-row">
-                <div className="nav-item">
-                    <Link to="/" className="nav-link" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh', fontWeight: 'bold' }}>
-                        Link Vink
-                    </Link>
-                </div>
-                {/* <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <HomeIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/features" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <InfoIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/pricing" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <MonetizationOnIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/testimonials" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <FeedbackIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/contact" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <ContactsIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/signup" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <PersonAddIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div>
-                <div className="nav-item flex-fill" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                    <Link to="/login" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', width: '100%' }}>
-                        <ExitToAppIcon style={{ color: '#ffffff' }} />
-                    </Link>
-                </div> */}
-            </div>
+  return (
+    <NavbarContainer className="navbar navbar-expand-lg">
+      {/* Mobile view */}
+      <MobileView className="navbar-nav d-lg-none">
+        <NavItem className="nav-item">
+          <NavLink to="/" className="nav-link" style={{fontWeight: 'bold'}}>
+            Link Vink
+          </NavLink>
+        </NavItem>
+      </MobileView>
 
-            {/* Desktop view */}
-            <div className="navbar-nav d-none d-lg-flex w-100 row">
-                <div className="col align-items-start mx-5">
-                    <Link to="/" className="nav-link" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 'bold' }}>
-                        Link Vink
-                    </Link>
-                </div>
-                <div className="col-md-auto d-flex justify-content-end">
-                    <div className="nav-item">
-                        <Link to="/" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Home
-                        </Link>
-                    </div>
-                    {/* <div className="nav-item">
-                        <Link to="/features" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Features
-                        </Link>
-                    </div> */}
-                    {/* <div className="nav-item">
-                        <Link to="/pricing" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Pricing
-                        </Link>
-                    </div> */}
-                    {/* <div className="nav-item">
-                        <Link to="/testimonials" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Testimonials
-                        </Link>
-                    </div> */}
-                    {/* <div className="nav-item">
-                        <Link to="/contact" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Contact
-                        </Link>
-                    </div> */}
-                    <div className="nav-item">
-                        <Link to="/register" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh' }}>
-                            Register
-                        </Link>
-                    </div>
-                    <div className="nav-item">
-                        <Link to="/login" className="nav-link text-center" style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '3vh', marginRight: '5vh' }}>
-                            Login
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    );
+      {/* Desktop view */}
+      <DesktopView className="navbar-nav d-lg-flex row">
+        <NavItem className="col align-items-start mx-5">
+          <NavLink to="/" className="nav-link" style={{fontWeight: 'bold'}}>
+            Link Vink
+          </NavLink>
+        </NavItem>
+        <NavItem className="col-md-auto" justifycontent="end">
+          <ScrollNavLink to="about" smooth duration={500} className="nav-link text-center">
+            About
+          </ScrollNavLink>
+          <ScrollNavLink to="benefits" smooth duration={500} className="nav-link text-center">
+            Benefits
+          </ScrollNavLink>
+          <ScrollNavLink to="features" smooth duration={500} className="nav-link text-center">
+            Features
+          </ScrollNavLink>
+          <ScrollNavLink to="stats" smooth duration={500} className="nav-link text-center">
+            Stats
+          </ScrollNavLink>
+          <NavLink to="/register" className="nav-link text-center">
+            Register
+          </NavLink>
+          <NavLink to="/login" className="nav-link text-center">
+            Login
+          </NavLink>
+        </NavItem>
+      </DesktopView>
+    </NavbarContainer>
+  );
 }
 
 export default Navbar;
