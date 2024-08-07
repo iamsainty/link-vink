@@ -17,6 +17,7 @@ const AddLink = () => {
       addLink(link);
       setLink({ title: "", url: "" });
       setMsg("");
+      window.location.reload();
     }
   };
 

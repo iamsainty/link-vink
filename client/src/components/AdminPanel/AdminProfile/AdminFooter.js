@@ -47,25 +47,6 @@ const Connectme = [
   },
 ];
 
-const pages = [
-  {
-    page: "Disclaimer",
-    link: "/disclaimer",
-  },
-  {
-    page: "Privacy Policy",
-    link: "/privacy-policy",
-  },
-  {
-    page: "Terms of Service",
-    link: "/terms-of-service",
-  },
-  {
-    page: "GDPR Compliance",
-    link: "/gdpr-compliance",
-  },
-];
-
 const FooterContainer = styled.div`
   background: linear-gradient(to right, #753a88, #cc2b5e);
   color: white;
@@ -166,16 +147,6 @@ function AdminFooter() {
               {Connectme.map((link, index) => (
                 <ListGroupItem key={index} className="list-group-item">
                   <ExternalLink href={link.link}>{link.page}</ExternalLink>
-                </ListGroupItem>
-              ))}
-            </ul>
-          </FooterSection>
-          <FooterSection className="col">
-            <SectionTitle>Legal Pages</SectionTitle>
-            <ul className="list-group list-group-flush">
-              {pages.map((link, index) => (
-                <ListGroupItem key={index} className="list-group-item">
-                  <FooterLink to={link.link}>{link.page}</FooterLink>
                 </ListGroupItem>
               ))}
             </ul>

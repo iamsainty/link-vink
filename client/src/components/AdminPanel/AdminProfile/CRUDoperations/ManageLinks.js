@@ -114,6 +114,13 @@ const ManageLinks = () => {
     // eslint-disable-next-line
   }, [user]);
 
+  useEffect(()=>{
+      if (user) {
+       fetchLinks(user._id);
+      }
+      // eslint-disable-next-line
+  }, [user])
+
   const handleSaveLink = () => {
     if (!editingLink.title || !editingLink.url) {
       alert("Title and URL cannot be empty.");

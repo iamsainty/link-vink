@@ -110,7 +110,7 @@ const ErrorMessage = styled.div`
 
 const LinkSection = styled.div`
   display: flex;
-  border: 1px solid black;
+  border: 1.5px solid black;
   border-radius: 20px;
   margin-top: 20px;
 `;
@@ -139,11 +139,8 @@ const ProfileCard = styled.div`
   }
 
   .copy-button {
-    background-color: black;
-    border-radius: 15px;
+    border-radius: 18px;
     height: 100%;
-    border: none;
-    color: white;
     padding: 0 20px;
     font-size: 1rem;
     transition: background 0.3s;
@@ -244,7 +241,7 @@ const MainIntro = () => {
               link-vink.vercel.app/u/{user.username}
             </Link>
           </p>
-          <button className="copy-button" onClick={handleCopy}>
+          <button className="copy-button btn btn-dark" onClick={handleCopy}>
             {copyStatus ? <FaCheck /> : <FaCopy />}
           </button>
         </LinkSection>
