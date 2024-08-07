@@ -2,7 +2,8 @@ import { useState } from "react";
 import LinkContext from "./linkContext";
 
 const LinkState = (props) => {
-  const host = "http://localhost:5005";
+  // const host = "http://localhost:5005";
+  const host = 'https://link-vink-server.vercel.app';
   const [links, setLinks] = useState([]);
   const [userlinkcount, setUserlinkcount] = useState(0);
   const [userclickcount, setUserclickcount] = useState(0);
