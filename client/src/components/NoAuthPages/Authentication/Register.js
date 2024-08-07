@@ -78,7 +78,7 @@ setLoading(true)
   };
 
   useEffect(() => {
-    if (localStorage.getItem('authtoken')) navigate('/admin');
+    if (localStorage.getItem('link-vink-authtoken')) navigate('/admin');
   }, [navigate]);
 
   const handleChange = async (e) => {
