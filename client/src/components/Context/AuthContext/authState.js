@@ -120,7 +120,7 @@ const AuthState = (props) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("authtoken");
+    localStorage.removeItem("link-vink-authtoken");
     setUser(null);
     setIsAuthenticated(false);
     navigate("/login");

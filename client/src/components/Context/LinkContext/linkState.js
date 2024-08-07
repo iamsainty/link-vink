@@ -35,7 +35,7 @@ const LinkState = (props) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authtoken: localStorage.getItem("authtoken"),
+          authtoken: localStorage.getItem("link-vink-authtoken"),
         },
         body: JSON.stringify(link),
       });
@@ -52,7 +52,7 @@ const LinkState = (props) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          authtoken: localStorage.getItem("authtoken"),
+          authtoken: localStorage.getItem("link-vink-authtoken"),
         },
       });
       setLinks(links.filter((link) => link._id !== id));
@@ -67,7 +67,7 @@ const LinkState = (props) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          authtoken: localStorage.getItem("authtoken"),
+          authtoken: localStorage.getItem("link-vink-authtoken"),
         },
         body: JSON.stringify({ title, url }),
       });
