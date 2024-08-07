@@ -149,7 +149,7 @@ setLoading(true)
                 fontSize: "1rem",
               }}
             >
-              Redister
+              Register
             </Button>
           )}
              <p className="text-center mt-3" style={{ fontSize: "0.875rem" }}>

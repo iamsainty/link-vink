@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { FaSadTear } from "react-icons/fa";
 import AuthContext from "../../../Context/AuthContext/authContext";
+import Loading from "../../../UIcomponent/Loading";
 
 const Container = styled.div`
   padding: 20px;
@@ -100,8 +101,10 @@ const ManageLinks = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [linkToDelete, setLinkToDelete] = useState(null);
+  const [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
+    setLoading(true)
     const fetchUserLinks = async () => {
       if (user) {
         await fetchLinks(user._id);
@@ -117,6 +120,7 @@ const ManageLinks = () => {
   useEffect(()=>{
       if (user) {
        fetchLinks(user._id);
+       setLoading(false);
       }
       // eslint-disable-next-line
   }, [user])
@@ -142,6 +146,10 @@ const ManageLinks = () => {
     setEditingLink(null);
     setShowEditModal(false);
   };
+
+  if(loading){
+    return <div><Loading /></div>
+  }
 
   const renderLinks = (links) => {
     if (userlinkcount === 0) {

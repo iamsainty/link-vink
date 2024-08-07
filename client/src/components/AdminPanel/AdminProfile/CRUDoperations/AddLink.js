@@ -5,6 +5,7 @@ import LinkContext from "../../../Context/LinkContext/linkContext";
 const AddLink = () => {
   const [link, setLink] = useState({ title: "", url: "" });
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { addLink } = useContext(LinkContext);
 
@@ -14,14 +15,14 @@ const AddLink = () => {
     } else if (link.url.trim() === "") {
       setMsg("URL cannot be empty");
     } else {
+      setLoading(true);
       await addLink(link);
+      setLoading(false);
       setLink({ title: "", url: "" });
       setMsg("");
       window.location.reload();
     }
   };
-
-  console.log(link)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,6 +62,7 @@ const AddLink = () => {
                   border: "0",
                 }}
                 onClick={handleAddLink}
+                disabled={loading}
               >
                 Add Link
               </Button>
@@ -72,6 +74,7 @@ const AddLink = () => {
                   border: "0",
                 }}
                 onClick={handleAddLink}
+                disabled={loading}
               >
                 Add Link
               </Button>
