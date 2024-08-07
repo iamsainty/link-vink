@@ -18,7 +18,7 @@ const AuthState = (props) => {
 
   const loadUser = async () => {
     setLoading(true);
-    const token = localStorage.getItem("authtoken");
+    const token = localStorage.getItem("link-vink-authtoken");
     if (token) {
       try {
         const response = await fetch(`${host}/auth/userdetails`, {
@@ -61,7 +61,7 @@ const AuthState = (props) => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("authtoken", data.token);
+        localStorage.setItem("link-vink-authtoken", data.token);
         setUser(data.data);
         setIsAuthenticated(true);
         navigate("/admin");
@@ -90,7 +90,7 @@ const AuthState = (props) => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("authtoken", data.token);
+        localStorage.setItem("link-vink-authtoken", data.token);
         setUser(data.user);
         setIsAuthenticated(true);
         navigate("/admin");
@@ -144,7 +144,7 @@ const AuthState = (props) => {
   // Function to update social media handles
 const updatesocial = async (socialHandles) => {
   setLoading(true); // Set loading state to true when starting the update
-  const token = localStorage.getItem("authtoken"); // Get the auth token
+  const token = localStorage.getItem("link-vink-authtoken"); // Get the auth token
   if (!token) {
     setError("No authentication token found");
     setLoading(false); // Set loading state to false if no token
@@ -189,7 +189,7 @@ const updateUserProfile = async (updates) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        authtoken: localStorage.getItem('authtoken')
+        authtoken: localStorage.getItem('link-vink-authtoken')
       },
       body: JSON.stringify(updates),
     });

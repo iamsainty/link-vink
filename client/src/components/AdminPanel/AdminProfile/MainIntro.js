@@ -12,7 +12,7 @@ import {
   FaCheck,
 } from "react-icons/fa";
 import { Link as ScrollLink } from "react-scroll";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -157,6 +157,7 @@ const MainIntro = () => {
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const [copyStatus, setCopyStatus] = useState(false);
   const { user, loadUser, loading, isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -215,6 +216,12 @@ const MainIntro = () => {
         <Loading />
       </Container>
     );
+  }
+
+  if(!isAuthenticated){
+    return (
+      navigate('/login')
+    )
   }
 
   if (!isAuthenticated || !user) {

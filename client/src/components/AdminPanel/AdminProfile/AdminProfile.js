@@ -19,7 +19,7 @@ function AdminProfile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("authtoken")) {
+    if (!localStorage.getItem("link-vink-authtoken")) {
       navigate("/login");
     }
   }, [navigate]);
