@@ -97,6 +97,9 @@ const Input = styled.input`
   border-bottom: 2px solid #ddd;
   outline: none;
   color: #333;
+  @media (max-width: 768px) {
+    width: 70%;
+  }
 `;
 
 const SaveButton = styled.button`
