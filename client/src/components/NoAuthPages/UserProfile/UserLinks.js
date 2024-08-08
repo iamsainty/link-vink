@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { FiCopy, FiCheck } from "react-icons/fi"; // Import the link icon
+import { FaUnlink } from "react-icons/fa"; // Import the link icon
 import AuthContext from "../../Context/AuthContext/authContext";
 import linkContext from "../../Context/LinkContext/linkContext";
-import { FiCopy, FiCheck } from "react-icons/fi";
 
 const Container = styled.div`
   display: flex;
@@ -81,10 +82,28 @@ const CopyIcon = styled.div`
   }
 `;
 
-const NoLinksMessage = styled.p`
-  font-size: 1.25rem;
+const NoLinksMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  color: #555;
+  text-align: center;
+`;
+
+const NoLinksIcon = styled(FaUnlink)`
+  font-size: 4rem;
   color: white;
-  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const NoLinksText = styled.p`
+  font-size: 1.5rem;
+  color: white;
+  margin: 0;
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 function UserLinks() {
@@ -151,7 +170,12 @@ function UserLinks() {
           </Card>
         ))
       ) : (
-        <NoLinksMessage>No links available</NoLinksMessage>
+        <NoLinksMessage>
+          <NoLinksIcon />
+          <NoLinksText>
+            Oops! Looks like {showuser?.data?.name} has not added any links yet.
+          </NoLinksText>
+        </NoLinksMessage>
       )}
     </Container>
   );
