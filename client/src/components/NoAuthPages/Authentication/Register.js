@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { Card, Form, Button } from 'react-bootstrap';
 import Loading from '../../UIcomponent/Loading'; // Import the Loading component
 import AuthContext from '../../Context/AuthContext/authContext';
+import { Helmet } from 'react-helmet-async';
+import defaulimage from "../../../media/Link-Vink-share.png";
 
 const Background = styled.div`
   display: flex;
@@ -91,6 +93,47 @@ setLoading(true)
 
   return (
     <Background>
+      <Helmet>
+        <title>Register - Link Vink </title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="title" content="Register to Your Link Vink Account" />
+        <meta
+          name="description"
+          content="Register to your Link Vink account to manage and unify all your social and professional links in one place."
+        />
+        <meta
+          name="keywords"
+          content="Link Vink, Register, Account, Social Links, Professional Links"
+        />
+        <meta name="author" content="Priyanshu Chaurasiya" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://link-vink.vercel.app/register" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://link-vink.vercel.app/register" />
+        <meta property="og:title" content="Register to Your Link Vink Account" />
+        <meta
+          property="og:description"
+          content="Register to your Link Vink account to manage and unify all your social and professional links in one place."
+        />
+        <meta property="og:image" content={defaulimage} />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+          property="twitter:url"
+          content="https://link-vink.vercel.app/register"
+        />
+        <meta
+          property="twitter:title"
+          content="Register to Your Link Vink Account"
+        />
+        <meta
+          property="twitter:description"
+          content="Register to your Link Vink account to manage and unify all your social and professional links in one place."
+        />
+        <meta property="twitter:image" content={defaulimage} />
+      </Helmet>
       <StyledCard className="shadow-lg">
         <h2 className="text-center mb-4" style={{ color: '#753a88', fontSize: '2rem' }}>
           Register Your Account

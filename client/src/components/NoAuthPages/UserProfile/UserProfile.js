@@ -7,7 +7,7 @@ import UserIntro from "./UserIntro";
 import UserLinks from "./UserLinks";
 import GetYours from "./GetYours";
 import { Helmet } from "react-helmet-async";
-import defaulimage from "../../../media/Link-Vink-share.png"
+import defaulimage from "../../../media/Link-Vink-share.png";
 
 function UserProfile() {
   const { username } = useParams();
@@ -65,17 +65,33 @@ function UserProfile() {
         }}
       >
         <Helmet>
-          <title>{user ? `${user.data.name}'s Profile - Link Vink` : "User Profile - Link Vink"}</title>
+          <title>
+            {user
+              ? `${user.data.name}'s Profile on Link Vink`
+              : "User Profile - Link Vink"}
+          </title>
           <meta
             name="description"
             content={
               user
-                ? `Check out ${user.data.name}'s profile on Link Vink. Connect with ${user.data.name} through their social links and more.`
-                : "User Profile on Link Vink."
+                ? `Connect with ${user.data.name} through their Link Vink profile and social links.`
+                : "Explore user profiles on Link Vink and connect through social links."
             }
           />
-          <meta name="keywords" content={`${user ? user.data.name : "User"}, Link Vink, Profile, Social Links`} />
-          <meta property="og:title" content={user ? `${user.data.name}'s Profile - Link Vink` : "User Profile - Link Vink"} />
+          <meta
+            name="keywords"
+            content={`${
+              user ? `${user.data.name}, ${user.data.username},` : "User"
+            } Link Vink, Profile, Social Links`}
+          />
+          <meta
+            property="og:title"
+            content={
+              user
+                ? `${user.data.name}'s Profile on Link Vink`
+                : "User Profile - Link Vink"
+            }
+          />
           <meta
             property="og:description"
             content={
@@ -87,8 +103,17 @@ function UserProfile() {
           <meta property="og:type" content="website" />
           <meta property="og:url" content={window.location.href} />
           <meta property="og:image" content={profileImage} />
+          <meta property="og:site_name" content="Link Vink" />
+          <meta property="og:locale" content="en_US" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={user ? `${user.data.name}'s Profile - Link Vink` : "User Profile - Link Vink"} />
+          <meta
+            name="twitter:title"
+            content={
+              user
+                ? `${user.data.name}'s Profile on Link Vink`
+                : "User Profile - Link Vink"
+            }
+          />
           <meta
             name="twitter:description"
             content={
@@ -98,6 +123,16 @@ function UserProfile() {
             }
           />
           <meta name="twitter:image" content={profileImage} />
+          <link rel="canonical" href={window.location.href} />
+          <script type="application/ld+json">
+            {`{
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "${user ? user.data.name : "User"}",
+              "url": "${window.location.href}",
+              "image": "${profileImage}",
+            }`}
+          </script>
         </Helmet>
         <GetYours />
         <UserIntro />
