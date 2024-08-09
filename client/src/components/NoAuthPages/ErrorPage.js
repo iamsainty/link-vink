@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import ErrorNavbar from "./ErrorNavbar";
 import { Helmet } from "react-helmet-async";
-import defaulimage from "../../../media/Link-Vink-share.png";
+import defaulimage from "../../media/Link-Vink-share.png";
 
 const NotFoundContainer = styled.div`
   display: flex;
