@@ -129,7 +129,7 @@ function UserProfile() {
               "@context": "https://schema.org",
               "@type": "Person",
               "name": "${user ? user.data.name : "User"}",
-              "url": "${window.location.href}",
+              "url": "${window.location.href}"
             }`}
           </script>
         </Helmet>
