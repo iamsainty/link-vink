@@ -130,7 +130,6 @@ function UserProfile() {
               "@type": "Person",
               "name": "${user ? user.data.name : "User"}",
               "url": "${window.location.href}",
-              "image": "${profileImage}",
             }`}
           </script>
         </Helmet>
