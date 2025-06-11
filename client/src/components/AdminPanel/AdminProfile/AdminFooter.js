@@ -11,39 +11,22 @@ const Navigateto = [
   { page: "View Stats", link: "stats" },
 ];
 
-const Contactme = [
-  {
-    platform: "Phone",
-    value: " +91 8572937042",
-    link: "tel:+918572937042",
-  },
-  {
-    platform: "E-Mail",
-    value: "ppriyanshuchaurasia@gmail.com",
-    link: "mailto:ppriyanshuchaurasia@gmail.com",
-  },
-];
-
 const Connectme = [
   {
     page: "Instagram",
-    link: "https://www.instagram.com/iam__sainty",
+    link: "https://www.instagram.com/its_shiviika/",
   },
   {
     page: "X (Twitter)",
-    link: "https://twitter.com/iam__sainty",
+    link: "https://x.com/Shiviika23",
   },
   {
     page: "Linkedin",
-    link: "https://www.linkedin.com/in/iamsainty/",
+    link: "https://www.linkedin.com/in/janhvipandey/",
   },
   {
     page: "GitHub",
-    link: "https://github.com/iamsainty",
-  },
-  {
-    page: "WhatsApp",
-    link: "https://wa.me/918572937042",
+    link: "https://github.com/janhvi-pandey",
   },
 ];
 
@@ -96,11 +79,6 @@ const ExternalLink = styled.a`
   }
 `;
 
-const FooterText = styled.p`
-  font-size: 1.75vh;
-  margin-top: 5vh;
-`;
-
 function AdminFooter() {
   return (
     <FooterContainer>
@@ -128,20 +106,6 @@ function AdminFooter() {
             </ul>
           </FooterSection>
           <FooterSection className="col">
-            <SectionTitle>Contact Me</SectionTitle>
-            <ul className="list-group list-group-flush">
-              {Contactme.map((link, index) => (
-                <ListGroupItem key={index} className="list-group-item">
-                  <ExternalLink href={link.link}>
-                    {link.platform}
-                    <br />
-                    {link.value}
-                  </ExternalLink>
-                </ListGroupItem>
-              ))}
-            </ul>
-          </FooterSection>
-          <FooterSection className="col">
             <SectionTitle>Connect Me</SectionTitle>
             <ul className="list-group list-group-flush">
               {Connectme.map((link, index) => (
@@ -152,11 +116,6 @@ function AdminFooter() {
             </ul>
           </FooterSection>
         </div>
-      </div>
-      <div className="container">
-        <FooterText>
-          Designed and Developed with &hearts; by Priyanshu Chaurasiya
-        </FooterText>
       </div>
     </FooterContainer>
   );
