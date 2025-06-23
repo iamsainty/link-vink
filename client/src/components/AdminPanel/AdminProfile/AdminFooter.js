@@ -30,6 +30,21 @@ const Connectme = [
   },
 ];
 
+const otherProjects = [
+  {
+    page: "Hey Sainty",
+    link: "https://hey-sainty.vercel.app",
+  },
+  {
+    page: "The Vidyapeeth Library",
+    link: "https://the-vidyapeeth-library.web.app",
+  },
+  {
+    page: "Blinc Tac Toe",
+    link: "https://blinc-tac-toe.vercel.app",
+  },
+];
+
 const FooterContainer = styled.div`
   background: linear-gradient(to right, #753a88, #cc2b5e);
   color: white;
@@ -109,6 +124,16 @@ function AdminFooter() {
             <SectionTitle>Connect Me</SectionTitle>
             <ul className="list-group list-group-flush">
               {Connectme.map((link, index) => (
+                <ListGroupItem key={index} className="list-group-item">
+                  <ExternalLink href={link.link}>{link.page}</ExternalLink>
+                </ListGroupItem>
+              ))}
+            </ul>
+          </FooterSection>
+          <FooterSection className="col">
+            <SectionTitle>Other Projects</SectionTitle>
+            <ul className="list-group list-group-flush">
+              {otherProjects.map((link, index) => (
                 <ListGroupItem key={index} className="list-group-item">
                   <ExternalLink href={link.link}>{link.page}</ExternalLink>
                 </ListGroupItem>
